@@ -1,0 +1,75 @@
+@import '../globals/declarations';
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}  
+
+.FullScreenLoading{
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: rgba(0,0,0, 0.33);
+
+  .spinner {
+    position: absolute;
+    top: calc(50vh - 75px);
+    left: calc(50vw - 75px);
+    z-index: 9999;
+    display: flex;
+    height: 150px;
+    width: 150px;
+    justify-content: space-around;
+    background-color: transparent;
+    text-align: center;
+    display: inline-block;
+  }
+  
+  .spinner:after{
+    content: " ";
+    position: absolute;
+    top:0;
+    display: block;
+    width: 114px;
+    height: 114px;
+    margin: 21px;
+    border-radius: 50%;
+    border: 11px solid #cef;
+    border-color: rgb(255,255,255) transparent rgb(255,255,255) transparent;
+    animation: lds-dual-ring 465ms linear infinite;
+  }
+}
+
+.FullScreenLoadingMin{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.LoadingBoxTop{
+  position: fixed;
+  top: 2px;
+  left: calc(50% - 50px);
+  width: 100px;
+  height: 30px;
+  line-height: 20px;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  color: $white;
+  background-color: $red-light;
+  font-size: 0.87rem;
+  text-align:center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: none;
+  border-radius: 2px;
+}

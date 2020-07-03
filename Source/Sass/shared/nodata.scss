@@ -1,0 +1,113 @@
+@import '../globals/declarations.scss';
+
+.NoData{
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  text-align: center;
+  line-height: 50px;
+
+  img{
+    max-height: 165px;
+    display: block;
+    margin: 75px auto 30px auto;
+  }
+}
+
+.NoDataMessages{
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  text-align: center;
+  line-height: 50px;
+
+  ul{
+    display: block;
+    text-align: left;
+    list-style: none;
+    margin:10px auto;
+    padding: 0;
+    max-width: calc(100% - 20px);
+
+    li{
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    i{
+      margin-right: 20px;
+    }
+  }
+
+  img{
+    max-height: 165px;
+    display: block;
+    margin: 75px auto 30px auto;
+  }
+}
+.NoDataFavourites,
+.NoChatDataHistory{
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  text-align: center;
+  line-height: 50px;
+
+  img{
+    max-height: 165px;
+    display: block;
+    margin: 35px auto 30px auto;
+  }
+}
+
+.NoDataCookies,
+.NoDataIframes,
+.NoDataImages,
+.NoDataLoadingImages,
+.NoDataTabs{
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  text-align: center;
+  line-height: 50px;
+
+  .h1-title{
+    max-width: 90%;
+    margin: 50px 5%;
+    text-align: center;
+  }
+
+  img{
+    max-width: 80vw;
+    max-height: calc(70vh - 50px);
+    display: block;
+    margin: 50px auto;
+    border-radius:5px;
+  }
+}
+
+.NoDataChat{
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  text-align: center;
+  line-height: 50px;
+
+  .h1-title{
+    max-width: 90%;
+    margin: 0px 5%;
+    text-align: center;
+    font-size: 1.4rem;
+    color:rgba(69,69,69,.8);
+  }
+
+  img{
+    max-width: 80vw;
+    max-height: 40vh;
+    display: block;
+    margin: 10px auto;
+    border-radius:5px;
+  }
+}

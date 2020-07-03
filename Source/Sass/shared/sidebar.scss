@@ -1,0 +1,93 @@
+@import '../globals/declarations.scss';
+
+@import '../shared/menu.scss';
+
+/*
+ * Main first sidebar
+ */
+ .SideBar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: $dashboard_menu-width;
+  height: 100vh;
+  border-right: 1px solid $border-color;
+  overflow: hidden;
+  transition-duration: $default_transition;
+  background-color: $white;
+  z-index: 1;
+
+  .title-logo {
+    width: 100%;
+    height: $dashboard_header-height;
+    border-bottom: 1px solid $border-color;
+    display: flex;
+    box-sizing: border-box;
+    padding: 10px 8px;
+    transition-duration: $default_transition;
+
+    .logo {
+      margin-top: 5px;
+
+      img {
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    .version {
+      color: rgba(69,69,69,.7);
+
+      .name{
+        color: rgba(69,69,69,1);
+      }
+
+      .name,
+      i {
+        line-height: 30px;
+        box-sizing: border-box;
+        padding-left: 20px;
+        font-size: 0.87rem;
+      }
+
+      i{
+        font-size: 0.753rem;
+        line-height: 3px;
+      }
+    }
+  }
+}
+
+.SideBar.SideBar-min {
+  width: $dashboard_menu-width-min;
+  transition-duration: 200ms;
+
+  .drop-down {
+    opacity: 0;
+  }
+}
+
+.SideBar.SideBar-min:hover {
+  width: $dashboard_menu-width;
+  z-index: 2;
+
+  .drop-down {
+    opacity: 1;
+  }
+}
+
+/*
+ * Minified second sidebar
+ */
+.SidebarMinified {
+  width: $dashboard_menu-width;
+  left: -300px;
+  transition-duration: $default_transition;
+}
+
+.SidebarMinified.opened {
+  width: $dashboard_menu-width;
+  left: 0px;
+  background-color:$white;
+  z-index: 2;
+}

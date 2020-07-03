@@ -1,0 +1,418 @@
+@import '../globals/declarations.scss';
+
+.Login,
+.User {
+  min-width: 600px;
+  width: 100%;
+  height: 100%;
+  min-height: 800px;
+  margin: 80px auto;
+  border-radius: 5px;
+  border: 1px solid $border-color;
+  box-shadow: 0px 0px 6px transparent;
+  transition-duration: $default_transition;
+  box-sizing: border-box;
+  padding: 10px;
+
+  .FullScreenList{
+
+    .holder-ul{
+      min-width: 500px;
+    }
+    
+    input{
+      width: 100%;
+      box-sizing: border-box;
+      padding: 5px 10px;
+      border: none;
+    }
+
+    .no-data{
+      height: 50px;
+      line-height: 50px;
+      color: rgba(0, 0, 0, 0.77);
+      text-align: center;
+    }
+
+    ul{
+      li{
+        min-width: 360px;
+        max-width: 500px;
+        border-bottom: 1px solid $border-color;
+      }
+      li:hover{
+        cursor: pointer;
+        background-color: rgba(199,199,199,.2);
+      }
+    }
+  }
+
+  .single-box {
+    position: relative;
+    box-sizing: border-box;
+    padding: 10px;
+
+    input {
+      margin: 5px 10px;
+      width: calc(100% - 20px);
+      height: 50px;
+      line-height: 50px;
+      color: rgba(0, 0, 0, 0.77);
+      padding: 0;
+      border: 1px solid rgba(69, 69, 69, 0.2);
+      border-radius: 5px;
+      transition-duration: $default_transition;
+      box-sizing: border-box;
+      padding: 12px 14px;
+      z-index: 1;
+      position: relative;
+      background-color: transparent;
+    }
+
+    .title {
+      position: absolute;
+      top: 31px;
+      left: 30px;
+      color: rgba(0, 0, 0, 0.47);
+      letter-spacing: 0.02rem;
+      display: block;
+      width: auto;
+      background-color: $white;
+      box-sizing: border-box;
+      padding: 0 5px;
+      transition-duration: $default_transition;
+      transform: scale(1.1);
+      width: auto;
+      z-index: 1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  .single-box.focus {
+    .title {
+      top: 5px;
+      left: 25px;
+      transform: scale(0.9);
+      color: $dodgerblue;
+      z-index: 2;
+    }
+
+    input {
+      border: 1px solid $dodgerblue;
+    }
+  }
+
+  .button {
+    box-sizing: border-box;
+    border-radius: 5px;
+    background-color: $dodgerblue;
+    letter-spacing: 0.02rem;
+    color: $white;
+    font-size: 0.87rem;
+    text-align: center;
+    border: none;
+    height: 40px;
+    line-height: 30px;
+    display: block;
+    margin: 10px 20px 20px 20px;
+    box-shadow: 0px 0px 3px transparent;
+    transition-duration: $default_transition;
+    float: right;
+    padding: 5px 20px;
+    font-weight: bold;
+  }
+
+  .button-link {
+    float: left;
+    text-decoration: none;
+    background-color: $green;
+  }
+
+  .button-delete {
+    background-color: $red;
+  }
+
+  .button:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 3px $dodgerblue;
+  }
+
+  .button-link:hover {
+    box-shadow: 0px 0px 3px $green;
+  }
+
+  .button-delete:hover {
+    box-shadow: 0px 0px 3px $red;
+  }
+
+  .logo {
+    width: 128px;
+    display: block;
+    margin: 20px auto 0 auto;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .error-message {
+    box-sizing: border-box;
+    padding: 0px 10px;
+    height: auto;
+    overflow: auto;
+    line-height: 30px;
+    font-size: 0.87rem;
+    background-color: $red-light-xl;
+    color: rgba(0, 0, 0, 0.77);
+    animation: opacity $default_transition linear ease-in;
+    margin: 10px 20px;
+    border-radius: 5px;
+
+    i {
+      font-size: inherit;
+      color: inherit;
+      margin: 0 10px 0 5px;
+    }
+  }
+
+  .successMessages-message {
+    box-sizing: border-box;
+    padding: 0px 10px;
+    height: auto;
+    overflow: auto;
+    line-height: 30px;
+    font-size: 0.87rem;
+    background-color: $green-light-xl;
+    color: rgba(0, 0, 0, 0.77);
+    animation: opacity $default_transition linear ease-in;
+    margin: 10px 20px;
+    border-radius: 5px;
+
+    i {
+      font-size: inherit;
+      color: inherit;
+      margin: 0 10px 0 5px;
+    }
+  }
+
+  .current-user {
+    padding: 20px;
+    font-size: 0.87rem;
+
+    i {
+      margin: 0 10px;
+    }
+  }
+
+  /*
+   * Dropdown
+   */
+   .select-wrapper {
+    box-sizing: border-box;
+    padding: 0px;
+    width: calc(100% - 20px);
+    margin: 13px;
+    position: relative;
+    z-index: 1;
+    margin:10px 20px;
+
+    .text{
+      position: absolute;
+      top:-7px;
+      left: 13px;
+      color: rgba(0, 0, 0, 0.47);
+      letter-spacing: 0.02rem;
+      transform: scale(1.1);
+      box-sizing: border-box;
+      padding: 0 5px;
+      transition-duration: 350ms;
+      width: auto;
+      z-index: 1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  .down {
+    font-size: 20px;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    color: #202124;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  select,
+  .select{
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    width: 100%;
+    height: 40px;
+    padding-left: 10px;
+    color: rgba(0, 0, 0, 0.47);
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    background-color: $white;
+    border: 1px solid $border-color;
+    font-size: 1.1rem;
+  }
+
+  .select-account{
+    width: calc(100% - 60px);
+
+    .down{
+      right: 13px;
+      top: 13px;
+    }
+  }
+  
+  .select {
+    line-height: 40px;
+    font-size: 1rem !important;
+    color: rgba(0, 0, 0, 0.77) !important;
+  }
+
+  select:focus::-ms-value {
+    background-color: transparent;
+  }
+
+  select option {
+    color: rgba(0, 0, 0, 0.47);
+    letter-spacing: 0.02rem;
+    transform: scale(1.1);
+  }
+
+  select::-ms-expand {
+    display: none;
+  }  
+}
+
+.Login{
+  select{
+    width: calc(100% - 20px);
+  }
+  .down{
+    right: 30px;
+  }
+}
+
+.privacy-terms-checkbox {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px 10px;
+  text-align: left;
+  font-size: 0.87rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #72777a;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin: 0 10px;
+  height: 50px;
+  line-height: 27px;
+
+  .switch {
+    width: 40px;
+    display: block;
+    position: relative;
+    padding-left: 0px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-left: 3px;
+  }
+
+  /* Hide the browser's default checkbox */
+  .switch input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  /* Create a custom checkbox */
+  .switch-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    border-radius: 5px;
+    transition-duration: $default_transition;
+  }
+
+  .switch-slider-not-checked:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: transparent;
+    color: rgb(255, 255, 255);
+    font-size: 19px;
+    font-weight: bold;
+    transition-duration: $default_transition;
+    border:1px solid $border-color;
+  }
+
+  /* On mouse-over, add a grey background color */
+  .switch:hover input ~ .switch-slider {
+    background-color: transparent;
+  }
+
+  /* When the checkbox is checked, add a blue background */
+  .switch input:checked ~ .switch-slider {
+    background-color: $green-light;
+  }
+
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .switch-slider:after {
+    content: '';
+    position: absolute;
+    display: none;
+  }
+
+  /* Show the checkmark when checked */
+  .switch input:checked ~ .switch-slider:after {
+    display: block;
+  }
+
+  /* Style the checkmark/indicator */
+  .switch .switch-slider:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  .link {
+    width: calc(100% - 40px);
+
+    a {
+      text-decoration: none;
+      color: $dodgerblue;
+      font-size: 1rem;
+    }
+  }
+}

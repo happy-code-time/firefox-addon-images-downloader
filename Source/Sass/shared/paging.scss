@@ -1,0 +1,38 @@
+.paging {
+  background-color: #f9fafb;
+  display: block;
+  min-height: 50px;
+  box-sizing: border-box;
+  padding: 20px;
+  border-bottom: 1px solid $border-color;
+  height: auto;
+  overflow: auto;
+
+  .buttons {
+    float: right;
+    margin-right: 5px;
+  }
+  .prev-button,
+  .next-button {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    font-size: 0.75rem;
+    margin: 0 10px;
+    border-radius: 3px;
+    background-color: $red;
+    color: $white;
+  }
+
+  .prev-button:hover,
+  .next-button:hover {
+    cursor: pointer;
+  }
+
+  .prev-button.deactivated,
+  .next-button.deactivated {
+    color: rgba(69, 69, 69, 0.1);
+  }
+}

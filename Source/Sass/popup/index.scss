@@ -1,0 +1,298 @@
+@import '../globals/declarations';
+
+@import '../shared/app';
+
+@import '../shared/sidebar';
+
+@import '../shared/content';
+
+@import '../shared/login';
+
+@import '../shared/registration';
+
+@import '../shared/deleteAccount';
+
+@import '../shared/inputAnimation';
+
+@import '../shared/inputSuggestion';
+
+@import '../shared/nodata';
+
+@import '../shared/paging';
+
+@import '../shared/globalErrors';
+
+@import '../shared/FullScreenList';
+
+@import '../shared/errorMessagesLearnMore';
+
+@import '../shared/privacyterms';
+
+@import '../shared/loadingAnimation';
+
+@import '../shared/selectWrapper';
+
+@import '../downloadimages/index';
+
+@import '../shared/AddonNotAvailable';
+
+@import './images';
+
+
+html,
+body{
+  border-radius: 5px;
+}
+
+html,
+body,
+#app,
+.Content {
+  overflow: hidden;
+  min-width: 320px;
+}
+
+.title-light{
+  font-size: 0.823rem;
+  color: rgb(122,122,122);
+  max-width: 90%;
+  margin: 0 5%;
+  text-align: center;
+}
+
+#app {
+
+  .DownloadImages{
+  
+    .filters {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.87rem;
+      color: #72777a;
+      padding: 0 5px;
+      min-height: 30px;
+      height: auto;
+      overflow: auto;
+  
+      span {
+        display: inline-block;
+        margin: 0 10px;
+      }
+  
+      .select-wrapper{
+        float: left;
+        display: block;
+        margin: 13px 0;
+  
+        .icon-down {
+          margin:0 !important;
+          color: rgb(69,69,69);
+        }
+      }
+  
+      .select-wrapper:hover{
+        cursor: pointer;
+      }
+  
+      .selected{
+        color: rgb(39,39,39);
+        font-weight: bold;
+      }
+    }
+    
+    .image-box {
+      width: calc(100% - 40px);
+      height: 418px;
+      margin: 20px;
+      display: inline-block;
+      border-radius: 5px;
+      border: 1px solid $border_color;
+      overflow: hidden;
+      position: relative;
+      text-align: center;
+      transition-duration: $default_transition;
+  
+      .star-add,
+      .star-remove {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        color: $yellow;
+        font-size: 1.17rem;
+      }
+  
+      .star-add:hover,
+      .star-remove:hover {
+        cursor: pointer;
+      }
+  
+      .star-remove:hover {
+        color: $red;
+      }
+  
+      .star-add:hover {
+        color: $green;
+      }
+  
+      img {
+        display: block;
+        max-width: 100%;
+        margin: 30px auto;
+        border-radius: 5px;
+        max-height: 200px;
+      }
+  
+      .text {
+        box-sizing: border-box;
+        padding: 10px;
+        line-height: 30px;
+        height: 100px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: absolute;
+        bottom: 90px;
+        left: 0;
+        width: 100%;
+      }
+  
+      .type {
+        position: absolute;
+        bottom: 50px;
+        left: 0;
+        height: 40px;
+        width: 100%;
+        background-color: $red;
+        color: $white;
+        text-align: center;
+        line-height: 40px;
+      }
+  
+      .options {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 50px;
+        width: 100%;
+        background-color: $dodgerblue;
+  
+        i,
+        a {
+          display: inline-block;
+          width: 30px;
+          height: 30px;
+          line-height: 30px;
+          text-align: center;
+          color: $white;
+          text-decoration: none;
+          font-size: 1.2rem;
+          margin: 10px;
+        }
+  
+        i:hover,
+        a:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  
+    @media screen and (min-width: $media-break){
+      .image-box {
+        width: calc(50% - 50px);
+      }
+    }
+  
+    @media screen and (min-width: 1400px){
+      .image-box {
+        width: calc(33% - 40px);
+      }
+    }
+  
+    @media screen and (min-width: 1600px){
+      .image-box {
+        width: calc(24% - 35px);
+      }
+    }
+  }
+
+  .Content,
+  .Content.minified,
+  .Main{
+    width: 100%;
+  }
+
+  .Main{
+
+    .ContentBody {
+      h1 {
+        text-align: center;
+        color: #202124;
+        font-size: 19px;
+        font-weight: 400;
+        line-height: 30px;
+      }
+  
+      .link {
+        width: 230px;
+        margin: 30px auto;
+        display: block;
+        box-sizing: border-box;
+        padding: 10px 20px;
+        text-align: center;
+        color: #212529;
+        font-size: 0.87rem;
+        text-decoration: none;
+        border-radius: 5px;
+        border: 1px solid $border-color;
+        background-color: $red;
+        color: $white;
+        box-shadow: 0px 0px 8px transparent;
+        transition-duration: $default_transition;
+      }
+  
+      .link:hover {
+        box-shadow: 0px 0px 8px $red;
+      }
+    }
+  }
+
+  .Content{
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .ContentStaticHeight{
+    overflow-y: auto;
+    max-height: calc(100% - 50px);
+    height:auto;
+    padding-bottom: 20px;
+  }
+
+  /**/
+  .SideBar {
+    width: $popupMenuWidth;
+  }
+
+  .SideBar.SideBar-min {
+    width: $popupMenuWidth-min;
+  }
+
+  .SideBar.SideBar-min:hover {
+    width: $popupMenuWidth;
+  }
+
+  .Content {
+    width: calc(100% - #{$popupMenuWidth});
+    left: $popupMenuWidth;
+  }
+
+  .Content.Content-min {
+    width: calc(100% - #{$popupMenuWidth-min});
+    left: $popupMenuWidth-min;
+  }
+
+  .Content.minified {
+    left: 0;
+  }
+}
+

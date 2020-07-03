@@ -1,0 +1,17 @@
+@import './downloadimages';
+
+@import '../shared/loadingAnimation';
+
+html,
+body,
+#app {
+  min-width: 320px;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+#app {
+
+}

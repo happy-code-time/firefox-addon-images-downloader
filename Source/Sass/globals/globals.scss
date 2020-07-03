@@ -1,0 +1,170 @@
+.w-100{
+  width: 100% !important;
+  clear: both;
+}
+
+.block{
+  display: block;
+}
+
+.flex{
+  display: flex;
+}
+
+.flex-row{
+  flex-direction: row;
+}
+
+.flex-column{
+  flex-direction: column;
+}
+
+.flex-start{
+  justify-content: flex-start;
+}
+
+.flex-space-around{
+  justify-content: space-around;
+}
+
+.flex-space-between{
+  justify-content: space-between;
+}
+
+.relative{
+  position: relative;
+}
+
+.font-input{
+  font-weight: 400;
+  font-size: 1rem;
+  font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+}
+
+.ff-title{
+  font-family: Roboto,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,Arial,sans-serif;
+}
+
+.h1-title{
+  color:#202124;
+  font-size: 24px;
+  font-weight: 400;
+  font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+}
+
+.text-center{
+  text-align:center;
+}
+
+.ff-roboto {
+  font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+}
+
+.buttons-group{
+  box-sizing: border-box;
+  padding:10px;
+  max-width: 90%;
+  margin: 20px 5%;
+}
+
+.buttons-group-delete-account{
+  box-sizing: border-box;
+  padding:10px;
+  max-width: 90%;
+  margin: 0 5%;
+}
+
+.yellow {
+  color: $yellow;
+}
+
+.red {
+  color: $red;
+}
+
+.green {
+  color: $green;
+}
+
+.lime {
+  color: $lime;
+}
+
+.dodgerblue{
+  color: $dodgerblue;
+}
+
+.little-gray {
+  color: rgba(69, 69, 69, 0.7);
+}
+
+.action-icon {
+  color: #313435;
+  opacity: 0.8;
+}
+
+.action-icon:hover {
+  cursor: pointer;
+}
+
+.py-2{
+  padding:20px 0;
+}
+
+.my-2{
+  margin:20px 0;
+}
+
+.my-0{
+  margin: 0px 0 !important;
+}
+
+.no-padding{
+  padding: 0px !important;
+}
+
+.mr-2{
+  margin-right: 20px;
+}
+
+h1,
+.h1{
+  color: rgba(0, 0, 0, 0.77);
+}
+
+.text-center{
+  text-align:center;
+}
+
+.icon-chat{
+  color: $green-light;
+}
+
+.icon-security{
+  color: $orange-light;
+}
+
+.icon-images{
+  color: $red;
+}
+
+.icon-messages{
+  color: rgb(122,122,122);
+}
+
+.icon-notifications{
+  color: $red-light;
+}
+
+.icon-iframes{
+  color: $green-light;
+}
+
+.icon-cookies{
+  color: #DEB887;
+}
+
+.single-entry,
+.popup-box-icon{
+  color: rgb(79, 79, 79) !important;
+}

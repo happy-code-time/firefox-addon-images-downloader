@@ -1,0 +1,87 @@
+@import '../globals/declarations';
+
+@import '../shared/app';
+
+@import '../shared/sidebar';
+
+@import '../shared/content';
+
+@import '../shared/login';
+
+@import '../shared/registration';
+
+@import '../shared/deleteAccount';
+
+@import '../shared/inputAnimation';
+
+@import '../shared/inputSuggestion';
+
+@import '../shared/nodata';
+
+@import '../shared/paging';
+
+@import '../shared/globalErrors';
+
+@import '../shared/FullScreenList';
+
+@import '../shared/errorMessagesLearnMore';
+
+@import '../shared/privacyterms';
+
+@import '../shared/loadingAnimation';
+
+@import '../loading';
+
+@import '../shared/selectWrapper';
+
+@import '../downloadimages/index';
+
+@import './user';
+
+@import './examples';
+
+html,
+body,
+#app {
+  min-width: 320px;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+#app {
+
+  .Content .head .popup-box h1 {
+    font-size: 0.923rem;
+  }
+  
+  .Home {
+    img {
+      display: block;
+      margin: 75px auto 30px auto;
+    }
+
+    ul{
+      max-width: 400px;
+      margin:0 auto;
+      list-style: none;
+
+      li{
+        min-height: 50px;
+        line-height: 50px;
+        letter-spacing: 0.3px;
+        font-size: 0.89rem;
+        font-weight: 500;
+        white-space: nowrap;
+        color: #72777a;
+
+        i{
+          font-weight: 900;
+          margin-right: 30px;
+          font-size: 1.43rem;
+        }
+      }
+    }
+  }
+}

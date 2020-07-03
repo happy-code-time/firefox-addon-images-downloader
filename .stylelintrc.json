@@ -1,0 +1,48 @@
+{
+    "plugins": [
+        "stylelint-scss"
+    ],
+    "rules": {
+        "color-no-invalid-hex": true,
+        "scss/selector-no-redundant-nesting-selector": true,
+        "selector-pseudo-class-no-unknown": [
+            true,
+            {
+                "ignorePseudoClasses": [
+                    "global"
+                ]
+            }
+        ],
+        "block-no-empty": null,
+        "comment-empty-line-before": [
+            "always",
+            {
+                "ignore": [
+                    "stylelint-commands",
+                    "after-comment"
+                ]
+            }
+        ],
+        "max-empty-lines": 2,
+        "unit-whitelist": [
+            "rem",
+            "%",
+            "px",
+            "s",
+            "vw",
+            "vh",
+            "ms",
+            "deg"
+        ],
+        "indentation": [
+            2,
+            {
+                "except": [
+                    "value"
+                ],
+                "severity": "warning"
+            }
+        ],
+        "number-leading-zero": null
+    }
+}

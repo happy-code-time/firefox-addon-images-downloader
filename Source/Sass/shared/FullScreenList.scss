@@ -1,0 +1,152 @@
+.FullScreenList {
+  @keyframes scaleIt {
+    0% {
+      top: 50vh;
+      left: 50vw;
+      width: 0;
+      height: 0;
+      transform: scale(0);
+    }
+    100% {
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      transform: scale(1);
+    }
+  }
+
+  position: fixed;
+  top: 50vh;
+  left: 50vw;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 9999999999;
+  animation: scaleIt 300ms forwards ease-in;
+  display: flex;
+
+  .holder-ul {
+    max-height: calc(100vh - 60px);
+    margin: 30px auto;
+    box-sizing: border-box;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    min-height: 40px;
+    line-height: 40px;
+    border-bottom: 2px solid rgb(169, 169, 169) !important;
+  }
+
+  .ul {
+    height: calc(100% - 50px);
+    list-style: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .li {
+    list-style: none;
+    min-height: 40px;
+    line-height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: none;
+    box-sizing: border-box;
+    padding: 0 30px;
+    width: 100%;
+  }
+
+  .icon-close {
+    position: absolute;
+    top: -50px;
+    right: 30px;
+    font-size: 3rem;
+  }
+
+  .icon-close:hover {
+    cursor: pointer;
+    color: rgba(244, 69, 89, 1);
+  }
+
+  .color-white {
+    color: rgb(255, 255, 255);
+  }
+}
+
+.FullScreenList.back {
+  @keyframes scaleItBack {
+    0% {
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      transform: scale(1);
+    }
+    100% {
+      top: 50vh;
+      left: 50vw;
+      width: 0;
+      height: 0;
+      transform: scale(0);
+    }
+  }
+  animation: scaleItBack 300ms forwards ease-in;
+}
+
+.FullScreenList {
+  .span-close {
+    position: absolute;
+    top: 3px;
+    right: 20px;
+    color: $white;
+    font-size: 3rem;
+  }
+
+  .span-close:hover {
+    cursor: pointer;
+    color: $red;
+  }
+
+  .holder-ul {
+    min-width: 250px;
+  }
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    border: none;
+  }
+
+  .no-data {
+    max-width: 90%;
+    margin: 0 5%;
+    height: 50px;
+    line-height: 50px;
+    color: rgba(0, 0, 0, 0.77);
+    text-align: center;
+  }
+
+  ul {
+    li {
+      min-width: 360px;
+      max-width: 500px;
+      border-bottom: 1px solid $border-color;
+    }
+    li:hover {
+      cursor: pointer;
+      background-color: rgba(199, 199, 199, 0.2);
+    }
+  }
+}

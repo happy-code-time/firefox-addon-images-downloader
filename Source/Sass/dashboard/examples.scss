@@ -1,0 +1,40 @@
+@import '../globals/declarations.scss';
+
+.Examples{
+    
+  h1{
+    color: rgba(0, 0, 0, 0.77);
+  }
+    
+  p{
+    line-height: 30px;
+    color: rgba(39, 39, 39, 0.77);
+  }
+
+  .example{
+    margin-top: 20px;
+    box-sizing: border-box;
+    padding: 0 5% 35px 5%;
+    border-bottom: 1px solid $border_color;
+
+    .box-content{
+      display: block;
+      margin-top: 40px;
+    }
+
+    ul{
+      padding:0;
+      margin: 20px;
+
+      li{
+        box-sizing: border-box;
+        padding:5px 10px;
+        margin: 5px;
+
+        .colored-example-element{
+          color: $red;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+@import '../globals/declarations.scss';
+
+.GlobalErrors{
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color: transpartent;
+  z-index: 10;
+  color:$white;
+
+  .single-error{
+    background-color: $white;
+    border:1px solid $border-color;
+    border-radius: 5px;
+    margin: 10px 0;
+    position: relative;
+    max-width: 350px;
+
+    h1{
+      line-height:30px;
+      color:#202124;
+      font-size: 0.91rem;
+      box-sizing: border-box;
+      padding: 0 20px;
+    }
+
+    .text{
+      line-height: 22px;
+      color: rgba(69,69,69,.8);
+      font-size: 0.87rem;
+      text-align: justify;
+      box-sizing: border-box;
+      padding: 0 20px;
+    }
+
+    .options{
+      width: 100%;
+      margin-top:15px;
+      border-top:1px solid $border-color;
+      box-sizing: border-box;
+      padding: 5px 0;
+
+      .single-option{
+        width: 50%;
+        text-align: center;
+        height: 50px;
+        line-height: 50px;
+        transition-duration: $default_transition;
+      }
+
+      .single-option,
+      a{
+        color:rgba(39,39,39,.7);
+        font-size: 0.91rem;
+        text-decoration: none;
+      }
+            
+      .single-option:hover,
+      a:hover{
+        cursor: pointer;
+        color: rgb(19,19,19);
+      }
+    }
+  }
+}

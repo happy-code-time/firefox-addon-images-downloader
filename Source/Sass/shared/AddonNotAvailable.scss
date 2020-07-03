@@ -1,0 +1,47 @@
+@import '../globals/declarations.scss';
+
+.AddonNotAvailable {
+  position: fixed;
+  top: 60px;
+  left: calc(#{$popupMenuWidth} + 1px);
+  width: calc(100% - #{$popupMenuWidth});
+  text-align: center;
+  line-height: 50px;
+  background-color: rgb(255, 255, 255);
+  height: 100vh;
+
+  img {
+    max-height: 165px;
+    display: block;
+    margin: 40px auto;
+  }
+
+  h1{
+    padding: 30px 0;
+    color: #72777a;
+  }
+
+  .dashboard-link {
+    width: 230px;
+    margin: 30px auto;
+    display: block;
+    box-sizing: border-box;
+    padding: 0 20px;
+    text-align: center;
+    font-size: 0.87rem;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid $border-color;
+    background-color: $red;
+    color: $white;
+    box-shadow: 0px 0px 13px transparent;
+    transition-duration: $default_transition;
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .dashboard-link:hover {
+    box-shadow: 0px 0px 13px $red;
+  }
+
+}

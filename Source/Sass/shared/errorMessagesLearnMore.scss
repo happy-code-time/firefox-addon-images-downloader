@@ -1,0 +1,25 @@
+@import '../globals/declarations.scss';
+
+.ErrorMessagesLearnMore{
+  .box{
+    background-color: $white;
+    border-bottom:1px solid $border-color;
+    margin: 0 1px;
+    position: relative;
+    width: 100%;
+    line-height:30px;
+    color:#202124;
+    font-size: 1.07rem;
+    text-align: justify;
+    box-sizing: border-box;
+    padding: 20px;
+
+    h1{
+      color: rgba(0, 0, 0, 0.77);
+    }
+    p{
+      line-height: 30px;
+      color: rgba(39, 39, 39, 0.77);
+    }
+  }
+}

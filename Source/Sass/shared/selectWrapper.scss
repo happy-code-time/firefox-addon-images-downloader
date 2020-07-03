@@ -1,0 +1,37 @@
+.select-wrapper {
+  box-sizing: border-box;
+  padding: 0px;
+  position: relative;
+  z-index: 1;
+
+  .select-wrapper-span {
+    position: relative;
+    z-index: 1;
+  }
+
+  .icon-down {
+    position: absolute;
+    top: 0;
+    right: -25px;
+    letter-spacing: 0.02rem;
+    box-sizing: border-box;
+    padding: 0 5px;
+    transition-duration: 350ms;
+    width: auto;
+    z-index: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin:0;
+    color: rgb(39,39,39);
+  }
+}
+.select-wrapper.inline{
+    display: inline-block;
+}
+.select-wrapper.inline{
+    display: block;
+}
+.select-wrapper.w-100{
+    width: 100%;
+}
