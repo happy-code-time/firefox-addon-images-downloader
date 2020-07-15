@@ -510,16 +510,16 @@ class ImagesTag extends React.Component<WebsiteContainerProps> {
     }
 
     /**
-     * Get filename up to 235 (+file type = ~ 240) strings length
-     * max is ~ 255
+     * Get filename up to 200 (+file type = ~ 240) strings length
+     * max is ~ 200
      * @param src string
      */
     generateFileName(src) {
         const names = src.split('/');
         let singleName = names[names.length - 1];
 
-        if (235 < singleName.length) {
-            singleName = singleName.substring(0, 235);
+        if (200 < singleName.length) {
+            singleName = singleName.substring(0, 200);
         }
 
         return singleName;

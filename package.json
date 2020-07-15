@@ -1,6 +1,6 @@
 {
   "name": "imagedownloader",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "Image Downloader",
   "scripts": {
     "compile": "./node_modules/.bin/gulp compile",

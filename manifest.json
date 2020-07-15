@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "ImageDownloader",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "Image Downloader",
   "browser_action": {
     "browser_style": true,
