@@ -13,10 +13,10 @@ const config = {
     entry: ['babel-polyfill', ENTRY_DASHBOARD.in ],
     output: {
         path: ENTRY_DASHBOARD.out,
-        filename: '[name].img.v2.7.1.js',
+        filename: 'app.bundle.v2.8.0.js',
     },
     cache: false,
-    devtool: 'inline-source-map',
+    devtool: false,
     module: {
         rules: [
             {

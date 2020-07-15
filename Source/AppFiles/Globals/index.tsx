@@ -1,4 +1,4 @@
-const version = '2.7.1';
+const version = '2.8.0';
 
 const appName = 'Image Downloader';
 

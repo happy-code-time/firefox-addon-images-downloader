@@ -10,11 +10,7 @@ import axios from 'axios';
 
 import customKey from '../../AppFiles/Functions/customKey';
 
-import LoadingAnimation from '../../AppFiles/Modules/LoadingAnimation';
-
-import SelectWrapperBlock from '../../AppFiles/Modules/SelectWrapperBlock';
-
-import FullScreenList from '../../AppFiles/Modules/FullScreenList';
+import LoadingBoxTop from '../../AppFiles/Modules/LoadingBoxTop';
 
 interface WebsiteContainerProps {
     contentData?: string | any;
@@ -43,8 +39,6 @@ class ImagesTag extends React.Component<WebsiteContainerProps> {
         this.next = this.next.bind(this);
         this.getPagerJsx = this.getPagerJsx.bind(this);
         this.saveImage = this.saveImage.bind(this);
-        this.setType = this.setType.bind(this);
-        this.setItemsPerSite = this.setItemsPerSite.bind(this);
 
         this.state = {
             minifiedSecondSideBar: true,
@@ -77,9 +71,7 @@ class ImagesTag extends React.Component<WebsiteContainerProps> {
              */
             itemsPerSite: 10,
             currentPage: 0,
-            itmes: [],
-            displayFullscreenlist: false,
-            displayFullscreenlistFilter: false,
+            itmes: []
         };
 
         this.translations = getTranslations();
@@ -406,44 +398,18 @@ class ImagesTag extends React.Component<WebsiteContainerProps> {
             })
         }
     }
-
-    /**
-     * Display full screen list, items per site
-     */
-    displayFullscreenlist(listname: string) {
-        this.setState({
-            [listname]: !this.state[listname]
-        });
-    }
-
+    
     /**
      * Get paging functionality
      */
     getPagerJsx() {
-        let { itemsPerSite, currentPage, items, itemsToRenderJsx, filteredTypes } = this.state;
+        let { itemsPerSite, currentPage, items } = this.state;
         const currentCount = items.length;
         let mainPage = currentPage;
         mainPage++;
 
         return (
             <div className="paging">
-                <span className="filters">
-                    <SelectWrapperBlock
-                        callback={(e) => this.displayFullscreenlist('displayFullscreenlistFilter')}
-                        iconDown='🔻'
-                        iconAttributes={undefined}
-                        title={`${this.translations.filter}: `}
-                        selectedType={filteredTypes}
-                    />
-                    <br />
-                    <SelectWrapperBlock
-                        callback={(e) => this.displayFullscreenlist('displayFullscreenlist')}
-                        iconDown='🔻'
-                        iconAttributes={undefined}
-                        title={`${this.translations.itemsPerSite}: `}
-                        selectedType={JSON.stringify(itemsPerSite)}
-                    />
-                </span>
                 <span className="buttons">
                     <i
                         onClick={(e) => this.prev()}
@@ -475,60 +441,6 @@ class ImagesTag extends React.Component<WebsiteContainerProps> {
         }
 
         return maxPages;
-    }
-
-    /**
-     * Set filter, to filter images by its original type
-     * @param e any
-     */
-    setType(event: React.ChangeEvent<HTMLInputElement>, object: { text: string, value: string }) {
-
-        if (!object) {
-            return this.setState({
-                displayFullscreenlist: false,
-                displayFullscreenlistFilter: false
-            });
-        }
-
-        this.setState({
-            animationLoading: true,
-            filteredTypes: object.value,
-            currentPage: 0,
-            displayFullscreenlist: false,
-            displayFullscreenlistFilter: false
-        }, () => {
-            this.getData(false);
-        });
-    }
-
-    /**
-     * How many images should be displayed on a single site
-     * @param e any
-     */
-    setItemsPerSite(event: React.ChangeEvent<HTMLInputElement>, object: { text: string, value: string }) {
-
-        if (!object) {
-            return this.setState({
-                displayFullscreenlist: false,
-                displayFullscreenlistFilter: false
-            });
-        }
-
-        let itemsPerSite = parseInt(object.value);
-
-        if (typeof 1 !== typeof itemsPerSite) {
-            itemsPerSite = 20;
-        }
-
-        this.setState({
-            animationLoading: true,
-            itemsPerSite,
-            currentPage: 0,
-            displayFullscreenlist: false,
-            displayFullscreenlistFilter: false
-        }, () => {
-            this.getData(false);
-        });
     }
 
     /**
@@ -691,10 +603,10 @@ class ImagesTag extends React.Component<WebsiteContainerProps> {
     }
 
     render(): JSX.Element {
-        const { animationLoading, displayFullscreenlist, availableTypes, items, itemsToRenderJsx, displayFullscreenlistFilter } = this.state;
+        const { animationLoading, items, itemsToRenderJsx } = this.state;
 
         if (animationLoading) {
-            return <LoadingAnimation />;
+            return <LoadingBoxTop />;
         }
 
         if (0 == itemsToRenderJsx.length) {
@@ -713,19 +625,9 @@ class ImagesTag extends React.Component<WebsiteContainerProps> {
                 {
                     undefined !== items && 0 !== items.length && 0 !== this.getMaxPages() &&
                     <h1 className="ff-title h1-sites text-center">
-                        {`${this.translations.page} ${this.state.currentPage + 1} ${this.translations.of} ${this.getMaxPages()}`}
+                        {`${this.translations.page} ${this.state.currentPage + 1} ${this.translations.of} ${this.getMaxPages()} `}
+                        ({`${items.length} ${this.translations.images}`})
                     </h1>
-                }
-                {
-                    0 !== items.length &&
-                    <span>
-                        <h1 className="ff-title h1-sites text-center">
-                            {`${items.length} ${this.translations.images}`}
-                        </h1>
-                        <h2 className="title-light">
-                            {this.translations.img_from_tags}
-                        </h2>
-                    </span>
                 }
                 {
                     0 === this.state.itemsToRenderJsx.length &&
@@ -744,11 +646,6 @@ class ImagesTag extends React.Component<WebsiteContainerProps> {
                             >
                                 <img alt='image' className="images-to-save" src={source} />
 
-                                <div className="text">
-                                    {
-                                        source
-                                    }
-                                </div>
                                 <div className="type">
                                     {
                                         type
@@ -771,87 +668,6 @@ class ImagesTag extends React.Component<WebsiteContainerProps> {
                         )
                     })
                 }
-                <FullScreenList
-                    data={availableTypes}
-                    closeIcon="✖"
-                    callback={this.setType}
-                    display={displayFullscreenlistFilter}
-                    inputActive={true}
-                    inputPlaceholder={'Filter....'}
-                    noDataText=' 🗯 '
-                />
-                <FullScreenList
-                    data={
-                        [
-                            {
-                                text: `1 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 1
-                            },
-                            {
-                                text: `2 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 2
-                            },
-                            {
-                                text: `3 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 3
-                            },
-                            {
-                                text: `4 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 4
-                            },
-                            {
-                                text: `5 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 5
-                            },
-                            {
-                                text: `10 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 10
-                            },
-                            {
-                                text: `20 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 20
-                            },
-                            {
-                                text: `30 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 30
-                            },
-                            {
-                                text: `40 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 40
-                            },
-                            {
-                                text: `50 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 50
-                            },
-                            {
-                                text: `60 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 60
-                            },
-                            {
-                                text: `70 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 70
-                            },
-                            {
-                                text: `80 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 80
-                            },
-                            {
-                                text: `90 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 90
-                            },
-                            {
-                                text: `100 ${this.translations.itemsPerSiteSuffix}`,
-                                value: 100
-                            }
-                        ]
-                    }
-                    closeIcon="✖"
-                    callback={this.setItemsPerSite}
-                    display={displayFullscreenlist}
-                    inputActive={true}
-                    inputPlaceholder={'10, 20, 30....'}
-                    noDataText=' 🗯 '
-                />
             </div>
         );
     }

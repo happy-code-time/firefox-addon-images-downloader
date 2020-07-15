@@ -50,7 +50,7 @@ class App extends Component {
     this.checkAddonsAvailability = this.checkAddonsAvailability.bind(this);
     
     this.state = {
-      documentWidth: 700,
+      documentWidth: 900,
       securityIsOn: false,
       animationLoading: false,
       addonNotAvailable: false

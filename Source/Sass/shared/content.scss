@@ -211,7 +211,7 @@
         .data-ul{
           li:hover{
             cursor: pointer;
-            background-color: $red !important;
+            background-color: $green !important;
             color: $white;
           }
         }
@@ -247,7 +247,7 @@
 
       .popup-box-all:hover {
         cursor: pointer;
-        background-color: $red;
+        background-color: $green;
         color: $white;
       }
     }

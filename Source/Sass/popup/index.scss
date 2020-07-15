@@ -6,12 +6,6 @@
 
 @import '../shared/content';
 
-@import '../shared/login';
-
-@import '../shared/registration';
-
-@import '../shared/deleteAccount';
-
 @import '../shared/inputAnimation';
 
 @import '../shared/inputSuggestion';
@@ -26,8 +20,6 @@
 
 @import '../shared/errorMessagesLearnMore';
 
-@import '../shared/privacyterms';
-
 @import '../shared/loadingAnimation';
 
 @import '../shared/selectWrapper';
@@ -35,6 +27,8 @@
 @import '../downloadimages/index';
 
 @import '../shared/AddonNotAvailable';
+
+@import '../loading';
 
 @import './images';
 
@@ -60,7 +54,20 @@ body,
   text-align: center;
 }
 
+.h1-sites {
+  color: #72777a;
+  font-size: 0.923rem;
+  margin:0;
+  padding:0;
+  height: 40px;
+  line-height: 40px;
+}
+
 #app {
+
+  .paging{
+    min-height: 40px;
+  }
 
   .DownloadImages{
   
@@ -102,8 +109,8 @@ body,
     
     .image-box {
       width: calc(100% - 40px);
-      height: 418px;
-      margin: 20px;
+      height: 220px;
+      margin: 10px;
       display: inline-block;
       border-radius: 5px;
       border: 1px solid $border_color;
@@ -112,34 +119,12 @@ body,
       text-align: center;
       transition-duration: $default_transition;
   
-      .star-add,
-      .star-remove {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        color: $yellow;
-        font-size: 1.17rem;
-      }
-  
-      .star-add:hover,
-      .star-remove:hover {
-        cursor: pointer;
-      }
-  
-      .star-remove:hover {
-        color: $red;
-      }
-  
-      .star-add:hover {
-        color: $green;
-      }
-  
       img {
         display: block;
         max-width: 100%;
-        margin: 30px auto;
+        margin: 10px auto;
         border-radius: 5px;
-        max-height: 200px;
+        max-height: 100px;
       }
   
       .text {
@@ -161,7 +146,7 @@ body,
         left: 0;
         height: 40px;
         width: 100%;
-        background-color: $red;
+        background-color: $green;
         color: $white;
         text-align: center;
         line-height: 40px;
@@ -197,7 +182,7 @@ body,
   
     @media screen and (min-width: $media-break){
       .image-box {
-        width: calc(50% - 50px);
+        width: calc(33% - 20px);
       }
     }
   
@@ -243,14 +228,14 @@ body,
         text-decoration: none;
         border-radius: 5px;
         border: 1px solid $border-color;
-        background-color: $red;
+        background-color: $green;
         color: $white;
         box-shadow: 0px 0px 8px transparent;
         transition-duration: $default_transition;
       }
   
       .link:hover {
-        box-shadow: 0px 0px 8px $red;
+        box-shadow: 0px 0px 8px $green;
       }
     }
   }

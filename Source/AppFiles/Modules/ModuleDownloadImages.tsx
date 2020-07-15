@@ -93,7 +93,7 @@ class ModuleDownloadImages extends React.Component {
             /**
              * pager
              */
-            itemsPerSite: 10,
+            itemsPerSite: this.getItemsPerSite(),
             currentPage: 0,
             displayFullscreenlist: false,
             displayFullscreenlistFilter: false,
@@ -118,6 +118,17 @@ class ModuleDownloadImages extends React.Component {
                 }
             }
         }, 5000);
+    }
+
+    getItemsPerSite(){
+        let items: any = localStorage.getItem('itemsPerSite');
+
+        if(null === items){
+            localStorage.setItem('itemsPerSite', '10');
+            items = '10';
+        }
+
+        return JSON.parse(items);
     }
 
     /**
@@ -197,7 +208,8 @@ class ModuleDownloadImages extends React.Component {
     }
 
     getImagesFromTab(id: number, resetFilter: boolean = false) {
-        let { itemsPerSite, currentPage, items, itemsWithType } = this.state;
+        let { currentPage, items, itemsWithType } = this.state;
+        let itemsPerSite = this.getItemsPerSite();
 
         this.setState({
             animationLoading: true,
@@ -416,10 +428,10 @@ class ModuleDownloadImages extends React.Component {
     }
 
     callback() {
-        let { currentPage, itemsPerSite, items } = this.state;
+        let { currentPage, items } = this.state;
         currentPage = parseInt(currentPage);
-        itemsPerSite = parseInt(itemsPerSite);
 
+        const itemsPerSite = this.getItemsPerSite();
         const start = (currentPage) * itemsPerSite;
         const end = start + itemsPerSite;
 
@@ -449,8 +461,9 @@ class ModuleDownloadImages extends React.Component {
      * Change page - next
      */
     next() {
-        let { itemsPerSite, currentPage, items } = this.state;
+        let { currentPage, items } = this.state;
         const currentCount = items.length;
+        const itemsPerSite = this.getItemsPerSite();
 
         let mainPage = currentPage;
         mainPage++;
@@ -477,20 +490,31 @@ class ModuleDownloadImages extends React.Component {
      * Get paging functionality
      */
     getPagerJsx() {
-        let { itemsPerSite, currentPage, items, itemsToRenderJsx, filteredTypes } = this.state;
+        let { currentPage, items, itemsToRenderJsx, filteredTypes } = this.state;
         const currentCount = items.length;
         let mainPage = currentPage;
         mainPage++;
+
+        const itemsPerSite = this.getItemsPerSite();
 
         return (
             <div className="paging">
                 <span className="filters flex">
                     <span className="actions">
                         <span>
-                            {this.translations.downloadSmall} {itemsToRenderJsx.length}
+                            {this.translations.downloadSmall} {itemsToRenderJsx.length} (original)
                         </span>
                         <i
                             onClick={(e) => this.donwloadAllAsZipFile()}
+                            className="fas fa-file-archive button-action archive-icon"
+                        ></i>
+                    </span>
+                    <span className="actions">
+                        <span>
+                            {this.translations.downloadSmall} {itemsToRenderJsx.length} (base64 - experimental)
+                        </span>
+                        <i
+                            onClick={(e) => this.donwloadAllAsZipFile('base64')}
                             className="fas fa-file-archive button-action archive-icon"
                         ></i>
                     </span>
@@ -571,6 +595,8 @@ class ModuleDownloadImages extends React.Component {
         if (typeof 1 !== typeof itemsPerSite) {
             itemsPerSite = 20;
         }
+
+        localStorage.setItem('itemsPerSite', JSON.stringify(itemsPerSite));
 
         this.setState({
             animationLoading: true,
@@ -822,39 +848,60 @@ class ModuleDownloadImages extends React.Component {
     /**
      * Pack all images to zip file
      */
-    packImages() {
-        const currentImages = document.querySelectorAll('.images-to-save');
+    packImages(currentImages: any, type: string = 'zip') {
         const zip = new JSZip();
+        const self = this;
 
         return new Promise(async resolve => {
             for (let x = 0; x <= currentImages.length - 1; x++) {
                 const src = currentImages[x].getAttribute('src');
 
                 if (-1 !== src.indexOf('http://') || -1 !== src.indexOf('https://')) {
-                    const img: any = await this.generateImages(src);
 
-                    if (img && img.byteLength) {
+                    if('zip' == type){
+                        const img: any = await this.generateImages(src);
 
-                        await axios
-                            .get(src)
-                            .then(content => {
-                                const { headers } = content;
-                                const imageType = headers['content-type'];
+                        if (img && img.byteLength) {
+    
+                            await axios
+                                .get(src)
+                                .then(content => {
+                                    const { headers } = content;
+                                    const imageType = headers['content-type'];
+    
+                                    try {
+                                        const fileType = this.getFileTypeFromHref(src);
+                                        const type = (undefined !== imageType) ? imageType : 'image/.' + fileType;
+                                        const fileEnd = this.getFileTypeFromContentTypeResponse(type);
+                                        const filename = this.generateFileName(src);
+                                        zip.file(`${customKey()}-----${filename}.${fileEnd}`, img, { binary: true });
+                                    }
+                                    catch (error) {
+    
+                                    }
+                                })
+                                .catch(error => {
 
+                                })
+                        }
+                    }
+
+                    else{
+                        const img: any = await self.generateImages(src);
+
+                        if (img && img.byteLength) {
+                            self.toDataURL(src, function(dataUrl) {
                                 try {
-                                    const fileType = this.getFileTypeFromHref(src);
-                                    const type = (undefined !== imageType) ? imageType : 'image/.' + fileType;
-                                    const fileEnd = this.getFileTypeFromContentTypeResponse(type);
-                                    const filename = this.generateFileName(src);
-                                    zip.file(`${filename}.${fileEnd}`, img, { binary: true });
+                                    const fileNameToSave = self.generateFileName(src);
+                                    const fileName = `${fileNameToSave}.txt`;
+                                    zip.file(`${customKey()}-----${fileName}`, dataUrl, { binary: true });
                                 }
+                
                                 catch (error) {
-                                    // console.error(error);
+
                                 }
-                            })
-                            .catch(error => {
-                                // console.error(error);
-                            })
+                            });
+                        }
                     }
                 }
             }
@@ -865,7 +912,7 @@ class ModuleDownloadImages extends React.Component {
     /**
      * Download all images as zip file 
      */
-    donwloadAllAsZipFile() {
+    donwloadAllAsZipFile(type: string = 'zip') {
         this.setState({
             animationLoading: true
         }, async () => {
@@ -873,13 +920,18 @@ class ModuleDownloadImages extends React.Component {
                 const currentImages = document.querySelectorAll('.images-to-save');
 
                 if (currentImages.length) {
-                    this.packImages().then((zip: any) => {
+                    this.packImages(currentImages, type).then((zip: any) => {
+
                         zip.generateAsync({ type: "blob" })
                             .then(function callback(blob) {
                                 FileSaver.saveAs(blob, `${customKey()}.zip`);
+                            })
+                            .then( () => {
+                                this.setState({ animationLoading: false });
+                            })
+                            .catch( () => {
+                                this.setState({ animationLoading: false });
                             });
-
-                        this.setState({ animationLoading: false });
                     });
                 }
                 else {
@@ -894,7 +946,8 @@ class ModuleDownloadImages extends React.Component {
     }
 
     getMaxPages() {
-        const { items, itemsPerSite } = this.state;
+        const itemsPerSite = this.getItemsPerSite();
+        const { items } = this.state;
         let maxPages: any = items.length / itemsPerSite;
 
         if (items.length <= itemsPerSite) {
