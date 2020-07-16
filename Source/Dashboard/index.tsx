@@ -10,6 +10,10 @@ import Home from './pages/Home';
 
 import DownloadImages from './pages/DownloadImages';
 
+import Tabs from './pages/Tabs';
+
+import Stored from './pages/Stored';
+
 import ErrorMessagesLearnMore from './pages/ErrorMessagesLearnMore';
 
 import Menu from '../AppFiles/Modules/Menu';
@@ -75,20 +79,19 @@ class App extends Component {
                   data={
                     [
                       {
-                        attributes: {
-                          title: this.translations.menu_title_home,
-                        },
                         icon: <i className="fas fa-user" />,
                         text: this.translations.home,
                         href: `${addonPrefixDashboard()}#/`,
                       },
                       {
-                        attributes: {
-                          title: this.translations.menu_title_download_images,
-                        },
                         icon: <i className="fas fa-images" />,
                         text: this.translations.menu_text_download_images,
-                        href: `${addonPrefixDashboard()}#/download-images`,
+                        href: `${addonPrefixDashboard()}#/tabs`,
+                      },
+                      {
+                        icon: <i className="fas fa-database" />,
+                        text: this.translations.menu_text_images_favourites,
+                        href: `${addonPrefixDashboard()}#/stored`,
                       }
                     ]
                   }
@@ -131,7 +134,9 @@ class App extends Component {
             <HashRouter>
               <Switch>
                 <Route exact path="/" component={Home} />
+                <Route exact path="/tabs" component={Tabs} />
                 <Route exact path="/download-images" component={DownloadImages} />
+                <Route exact path="/stored" component={Stored} />
                 <Route exact path="/error-messages-learn-more" component={ErrorMessagesLearnMore} />
               </Switch>
             </HashRouter>

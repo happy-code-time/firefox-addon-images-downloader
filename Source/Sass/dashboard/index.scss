@@ -44,6 +44,13 @@ body {
 
 #app {
 
+  .canvas{
+    padding: 20px 0;
+    max-width: 100%;
+    margin: 0 auto;
+    height: 400px;
+  }
+
   .Content .head .popup-box h1 {
     font-size: 0.923rem;
   }

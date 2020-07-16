@@ -1,6 +1,6 @@
 {
   "name": "imagedownloader",
-  "version": "2.9.1",
+  "version": "3.0.0",
   "description": "Image Downloader",
   "scripts": {
     "compile": "./node_modules/.bin/gulp compile",
@@ -63,6 +63,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "babel-polyfill": "^6.26.0",
+    "chart.js": "^2.9.3",
     "crypto-js": "^3.2.1",
     "css-loader": "^3.2.0",
     "file-saver": "^2.0.2",

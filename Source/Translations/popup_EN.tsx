@@ -1,6 +1,10 @@
 import * as React from 'react';
 
 const EN={
+  exclude: 'Exclude from zip export',
+  restoreExclude: 'Include back to the zip export',
+  saveToFavourites: 'Save URL (image online path) to your local favourites',
+  removeFromFavourites: 'Remove URL (image online path) from your local favourites',
   download_base64: 'Download as base64',
   loading: 'Loading...',
   links: 'Links',

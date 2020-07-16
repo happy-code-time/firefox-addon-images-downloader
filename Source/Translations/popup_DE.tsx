@@ -1,6 +1,10 @@
 import * as React from 'react';
 
 const DE = {
+  exclude: 'Für den Zip Export ignorieren',
+  restoreExclude: 'Wieder für den ZIP export freigeben',
+  saveToFavourites: 'URL (Online Pfad des Fotos) zu der lokalen Favouriten Liste hinzufügen',
+  removeFromFavourites: 'URL (Online Pfad des Fotos) von der lokalen favouriten Liste entfernen',
   download_base64: 'Download als base64',
   loading: 'Laden...',
   links: 'Links',

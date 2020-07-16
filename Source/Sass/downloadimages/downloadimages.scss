@@ -48,6 +48,8 @@
       overflow: hidden;
       position: relative;
       transition-duration: $default_transition;
+      text-decoration: none;
+      color: #72777a;
 
       .iframe-disabler {
         position: relative;
@@ -83,7 +85,7 @@
 
     .single-tab:hover {
       cursor: pointer;
-      box-shadow: 0px 0px 6px $red;
+      box-shadow: 0px 0px 6px $green;
     }
   }
 
@@ -215,7 +217,7 @@
     }
 
     .left {
-      width: 270px;
+      width: 250px;
       height: calc(100vh - 60px);
       overflow: hidden;
       border-right: 1px solid $border-color;
@@ -239,6 +241,11 @@
           font-size: 1.1rem;
           color: rgba(69,69,69,.7);
 
+          a{
+            text-decoration: none;
+            color: rgba(69,69,69,.7);
+          }
+
           h2 {
             overflow: hidden;
             text-overflow: ellipsis;
@@ -255,11 +262,20 @@
     }
 
     .right {
-      width: calc(100% - 270px);
+      width: calc(100% - 250px);
       min-height: calc(100vh - 250px);
       overflow-x: hidden;
       overflow-y: auto;
       box-sizing: border-box;
+
+      .h1{
+        i{
+          cursor: pointer;
+          color: $green;
+          font-size: 1.6rem;
+          margin-left: 20px;
+        }
+      }
 
       .h1-sites {
         color: #72777a;
@@ -370,6 +386,57 @@
             cursor: pointer;
           }
         }
+      }
+
+      .image-box.dimmed:after{
+        @keyframes showDimmed {
+          0%{
+            height: 0%;
+          }
+          100%{
+            height: 100%;
+          }
+        }
+        content: '';
+        position: absolute;
+        top:0;
+        left:0;
+        width: 100%;
+        height: 100%;
+        z-index:2;
+        background-color: rgba(122,122,122, .77);
+      }
+
+      .remove-image,
+      .restore-image{
+        position: absolute;
+        top:3px;
+        right: 3px;
+        font-size: 1rem;
+        color: #72777a;
+        transition-duration: $default_transition;
+        cursor: pointer;
+        z-index:3;
+      }
+    
+      .remove-image:hover{
+        color: $red;
+      }
+    
+      .restore-image{
+        color: $dodgerblue;
+      }
+
+      .store,
+      .remove-stored{
+        position: absolute;
+        top:5px;
+        left: 3px;
+        font-size: 1rem;
+        color: gold;
+        transition-duration: $default_transition;
+        cursor: pointer;
+        z-index:3;
       }
 
       @media screen and (min-width: $media-break){

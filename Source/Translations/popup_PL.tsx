@@ -1,6 +1,10 @@
 import * as React from 'react';
 
 const PL = {
+  exclude: 'Ignoruj dla eksportu do pliku zip',
+  restoreExclude: 'Przywróć plik dla eksportu zip',
+  saveToFavourites: 'Dodaj adres url zdjęcia do twoich lokalnych ulubionych',
+  removeFromFavourites: 'Usuń adres url zdjęcia z twoich lokalnych ulubionych',
   download_base64: 'Pobierz jako base64',
   loading: 'Ładowanie...',
   links: 'Linki',

@@ -144,11 +144,36 @@ const getCookiesFromCurrentTab = tabData => {
 /**
  * Background message listener
  */
+
+if(!getItem('localImages')){
+  setItemToLocalStorage('localImages', []);  
+}
+
 //@ts-ignore
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const { tab } = sender;
 
   switch (request.action) {
+    case 'set-image-local-store' : {
+      const localImages = getItem('localImages');
+      const { source } = request;
+      localImages.push(source);
+      setItemToLocalStorage('localImages', localImages);
+      return sendResponse(getItem('localImages'));
+      break;
+    }
+    case 'remove-image-local-store' : {
+      let localImages = getItem('localImages');
+      const { source } = request;
+      localImages = localImages.filter( i => i != source);
+      setItemToLocalStorage('localImages', localImages);
+      return sendResponse(getItem('localImages'));
+      break;
+    }
+    case 'get-all-images-from-local-store' : {
+      return sendResponse(getItem('localImages'));
+      break;
+    }
     case 'check-addons-availablitity': {
       return sendResponse(
         new Promise(resolve => {

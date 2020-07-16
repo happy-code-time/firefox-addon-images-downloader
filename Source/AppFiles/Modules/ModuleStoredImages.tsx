@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { Link } from 'react-router-dom';
-
 import NoDataImages from './NoDataImages';
 
 import LoadingBoxTop from './LoadingBoxTop';
@@ -20,15 +18,11 @@ import JSZipUtils from 'jszip-utils';
 
 import customKey from '../Functions/customKey';
 
-import getAllTabs from '../Functions/tabs/getAllTabs';
-
-import isEquivalent from '../Functions/checkObjectsAreEqual';
-
 import addToStore from '../Store/addToStore';
 
 import Chart from 'chart.js';
 
-class ModuleDownloadImages extends React.Component {
+class ModuleStoredImages extends React.Component {
     public props: {
         [key: string]: any;
     };
@@ -51,7 +45,6 @@ class ModuleDownloadImages extends React.Component {
 
     constructor(props) {
         super(props);
-        this.getAllTabs = this.getAllTabs.bind(this);
         this.getImagesFromTab = this.getImagesFromTab.bind(this);
         this.getActiveTabsTitle = this.getActiveTabsTitle.bind(this);
         this.callback = this.callback.bind(this);
@@ -65,9 +58,9 @@ class ModuleDownloadImages extends React.Component {
         this.generateImages = this.generateImages.bind(this);
         this.setType = this.setType.bind(this);
         this.setItemsPerSite = this.setItemsPerSite.bind(this);
-        this.toggleIgnoreImage = this.toggleIgnoreImage.bind(this);
-        this.toggleStored = this.toggleStored.bind(this);
-
+        this.toggleChart = this.toggleChart.bind(this);
+        this.updateChart = this.updateChart.bind(this);
+        
         this.state = {
             animationLoading: false,
             /**
@@ -91,7 +84,6 @@ class ModuleDownloadImages extends React.Component {
             href: '',
             itemsToRenderJsx: [],
             filteredTypes: 'all',
-            availableTypes: [],
             loadingTabsDone: false,
             currentImagesAndType: [],
             /**
@@ -100,11 +92,6 @@ class ModuleDownloadImages extends React.Component {
             itemsPerSite: this.getItemsPerSite(),
             currentPage: 0,
             displayFullscreenlist: false,
-            displayFullscreenlistFilter: false,
-            sourceToIgnore: {
-                0: []
-            },
-            sourceStored: localStorage.getItem('localImages') ? JSON.parse(localStorage.getItem('localImages')) : [],
             renderChart: false,
             chartVisibility: localStorage.getItem('chartVisibility') ? JSON.parse(localStorage.getItem('chartVisibility')) : true,
         }
@@ -112,22 +99,8 @@ class ModuleDownloadImages extends React.Component {
         this.translations = props.translations;
     }
 
-    componentDidMount() {
-        clearInterval(this.intervaller);
-        this.getAllTabs();
-
-        this.intervaller = setInterval(async () => {
-            const currentTabs = this.state.tabs;
-
-            if (currentTabs && currentTabs.length) {
-                const tabsData = await getAllTabs().then(data => data);
-                const { tabs } = tabsData;
-
-                if (!isEquivalent(tabs, currentTabs)) {
-                    this.getAllTabs(false);
-                }
-            }
-        }, 5000);
+    componentDidMount(){
+        this.getImagesFromTab();
     }
 
     getItemsPerSite() {
@@ -139,48 +112,6 @@ class ModuleDownloadImages extends React.Component {
         }
 
         return JSON.parse(items);
-    }
-
-    /**
-     * Get all tabs as intervaller 
-     * and append new tabs
-     * if tabs has changed
-     */
-    getAllTabs(isRegularClickEvent: boolean = true) {
-        this.setState({
-            animationLoading: isRegularClickEvent
-        }, () => {
-
-            setTimeout(async () => {
-                const tabsData = await getAllTabs().then(data => data).catch(e => []);
-                const { data, tabs } = tabsData;
-
-                this.setState({
-                    data,
-                    tabs,
-                    animationLoading: false,
-                }, () => {
-
-                    /**
-                     * Get tabid from url
-                     */
-                    let queryString: any = window.location.hash;
-
-                    if (queryString) {
-                        queryString = queryString.split('?tabid=');
-
-                        if (queryString && queryString[1]) {
-                            const id = queryString[1];
-
-                            if (id && NaN !== (parseInt(id)) && isRegularClickEvent) {
-                                this.getImagesFromTab(parseInt(id), true);
-                            }
-                        }
-                    }
-                });
-
-            }, 800);
-        });
     }
 
     /**
@@ -217,211 +148,46 @@ class ModuleDownloadImages extends React.Component {
         return type;
     }
 
-    getImagesFromTab(id: number, resetFilter: boolean = false) {
-        let { currentPage, items, itemsWithType } = this.state;
+    getImagesFromTab() {
+        let { currentPage } = this.state;
         let itemsPerSite = this.getItemsPerSite();
+        const itemsSource = localStorage.getItem('localImages') ? JSON.parse(localStorage.getItem('localImages')) : [];
+        const items = [];
 
         this.setState({
             animationLoading: true,
             renderChart: false
         }, () => {
-            let { data, filteredTypes } = this.state;
-            const { media } = data;
 
-            /**
-             * Getl all images from scratch
-             */
-            if (resetFilter) {
-                filteredTypes = 'all';
-                itemsPerSite = 10;
-                currentPage = 0;
+            this.setState({
+                animationLoading: true,
+                itemsPerSite,
+                currentPage,
                 renderChart: false
-                itemsWithType = [];
+            }, () => {
 
-                if (undefined !== media.images && undefined !== media.images[`${id}`]) {
-                    items = media.images[`${id}`];
+                for (let x = 0; x <= itemsSource.length - 1; x++) {
+                    items.push(itemsSource[x]);
                 }
 
                 this.setState({
-                    animationLoading: true,
-                    itemsPerSite,
-                    currentPage,
-                    filteredTypes,
-                    renderChart: false
-                }, async () => {
-                    /**
-                     * Calculate all src without src inside the images
-                     */
-                    const availableTypesTemp = [];
-                    const difference = [];
-                    const availableTypes = [
-                        {
-                            text: 'All',
-                            value: 'all',
-                        }
-                    ];
-
-                    let contentData: { images: any, hostname: string, protocol: string, href: string } = {
-                        images: [],
-                        hostname: '',
-                        protocol: '',
-                        href: ''
-                    };
-
-                    contentData = await this.getDataContentScript(id);
-                    let { images, hostname, protocol, href } = contentData;
-                    /**
-                     * Merge images from content script
-                     * with images from requests
-                     * and avoid dupplicates
-                     */
-                    for (let x = 0; x <= images.length - 1; x++) {
-                        let link = images[x].src;
-
-                        if (!items.includes(link)) {
-                            /**
-                             * Build valid link
-                             */
-                            if (-1 === link.indexOf('http://') && -1 === link.indexOf('https://') && -1 === link.indexOf('data:image') && -1 === link.indexOf('moz-extension://')) {
-
-                                if ('/' !== link.charAt(0)) {
-                                    link = `/${link}`;
-                                }
-
-                                link = `${protocol}//${hostname}${link}`;
-                            }
-
-                            /**
-                             * If the link has // - 2 slashes as prefix, remove them
-                             */
-                            if ('//' == link.substr(0, 2) && '////' !== link.substr(0, 4)) {
-                                link = `${protocol}//${link.substr(2, link.length)}`;
-                            }
-
-                            if (!items.includes(link)) {
-                                items.push(link);
-                            }
-                        }
-                    }
-
-                    for (let x = 0; x <= items.length - 1; x++) {
-                        const type = await this.getImagesType(items[x]);
-
-                        itemsWithType.push({
-                            link: items[x],
-                            type
-                        });
-                    }
-
-                    for (let x = 0; x <= itemsWithType.length - 1; x++) {
-                        const type = itemsWithType[x].type;
-
-                        if (!availableTypesTemp.includes(type) && '' !== type && undefined !== type) {
-                            availableTypesTemp.push(type);
-
-                            availableTypes.push(
-                                {
-                                    'text': type,
-                                    'value': type
-                                }
-                            );
-                        }
-
-                        if (undefined !== type && '' !== type) {
-                            if ('all' == filteredTypes) {
-                                difference.push({
-                                    source: itemsWithType[x].link,
-                                    type
-                                });
-                            }
-                            else {
-                                if (type === filteredTypes) {
-                                    difference.push({
-                                        source: items[x].link,
-                                        type
-                                    });
-                                }
-                            }
-                        }
-                    }
-
-                    this.setState({
-                        activeTabId: id,
-                        items: difference,
-                        itemsWithType,
-                        hostname,
-                        protocol,
-                        href,
-                        availableTypes,
-                        filteredTypes,
-                        itemsPerSite
-                    }, this.callback);
-                });
-            }
-
-            /**
-             * Get all images by filter
-             */
-            else {
-                const difference = [];
-                const tempLinks = [];
-
-                this.setState({
-                    animationLoading: true,
-                    itemsPerSite,
-                    currentPage,
-                    filteredTypes,
-                    renderChart: false
-                }, () => {
-
-                    for (let x = 0; x <= itemsWithType.length - 1; x++) {
-                        const type = itemsWithType[x].type;
-
-                        if (undefined !== type && '' !== type && !tempLinks.includes(itemsWithType[x].link)) {
-                            if ('all' == filteredTypes) {
-                                tempLinks.push(itemsWithType[x].link);
-                                difference.push({
-                                    source: itemsWithType[x].link,
-                                    type
-                                });
-                            }
-                            else {
-                                if (type === filteredTypes) {
-                                    tempLinks.push(itemsWithType[x].link);
-                                    difference.push({
-                                        source: itemsWithType[x].link,
-                                        type
-                                    });
-                                }
-                            }
-                        }
-                    }
-
-                    this.setState({
-                        activeTabId: id,
-                        items: difference,
-                        filteredTypes
-                    }, this.callback);
-                })
-            }
+                    items
+                }, this.callback );
+            })
         });
     }
 
     /**
      * Get all images from content script
      */
-    async getDataContentScript(tabid: number) {
+    async getDataContentScript() {
         // @ts-ignore
         return await browser.runtime.sendMessage({
-            action: 'get-all-images-by-tab-id',
-            tabId: tabid
+            action: 'get-all-images-from-local-store',
         }).then(response => response)
             .catch(() => {
                 return {
                     images: [],
-                    hostname: '',
-                    protocol: '',
-                    href: ''
                 };
             });
     }
@@ -437,25 +203,16 @@ class ModuleDownloadImages extends React.Component {
     }
 
     callback() {
-        let { currentPage, items, sourceToIgnore } = this.state;
+        let { currentPage, items } = this.state;
         currentPage = parseInt(currentPage);
 
         const itemsPerSite = this.getItemsPerSite();
         const start = (currentPage) * itemsPerSite;
         const end = start + itemsPerSite;
 
-        const maxPages = this.getMaxPages();
-
-        for (let x = 0; x <= maxPages; x++) {
-            if (undefined == sourceToIgnore[x]) {
-                sourceToIgnore[x] = [];
-            }
-        }
-
         this.setState({
             itemsToRender: items.slice(start, end),
-            sourceToIgnore,
-            renderChart: true
+            renderChart: false
         }, this.generateImagesJsx);
     }
 
@@ -467,8 +224,7 @@ class ModuleDownloadImages extends React.Component {
 
         if (currentPage !== 0) {
             this.setState({
-                currentPage: currentPage - 1,
-                renderChart: false
+                currentPage: currentPage - 1
             }, this.callback);
         }
     }
@@ -486,9 +242,8 @@ class ModuleDownloadImages extends React.Component {
 
         if (itemsPerSite * mainPage < currentCount) {
             this.setState({
-                currentPage: currentPage + 1,
-                renderChart: false
-            }, this.callback);
+                currentPage: currentPage + 1
+            }, this.callback );
         }
     }
 
@@ -505,7 +260,7 @@ class ModuleDownloadImages extends React.Component {
      * Get paging functionality
      */
     getPagerJsx() {
-        let { currentPage, items, itemsToRenderJsx, filteredTypes, sourceToIgnore } = this.state;
+        let { currentPage, items, itemsToRenderJsx, filteredTypes } = this.state;
         const currentCount = items.length;
         let mainPage = currentPage;
         mainPage++;
@@ -517,7 +272,7 @@ class ModuleDownloadImages extends React.Component {
                 <span className="filters flex">
                     <span className="actions">
                         <span>
-                            {this.translations.downloadSmall} {itemsToRenderJsx.length - sourceToIgnore[currentPage].length} (original)
+                            {this.translations.downloadSmall} {itemsToRenderJsx.length} (original)
                         </span>
                         <i
                             onClick={(e) => this.donwloadAllAsZipFile()}
@@ -526,21 +281,13 @@ class ModuleDownloadImages extends React.Component {
                     </span>
                     <span className="actions">
                         <span>
-                            {this.translations.downloadSmall} {itemsToRenderJsx.length - sourceToIgnore[currentPage].length} (as base64 string)
+                            {this.translations.downloadSmall} {itemsToRenderJsx.length} (as base64 string)
                         </span>
                         <i
                             onClick={(e) => this.donwloadAllAsZipFile('base64')}
                             className="fas fa-file-archive button-action archive-icon"
                         ></i>
                     </span>
-                    <SelectWrapperBlock
-                        callback={(e) => this.displayFullscreenlist('displayFullscreenlistFilter')}
-                        iconDown='🔻'
-                        iconAttributes={undefined}
-                        title={`${this.translations.filter}: `}
-                        selectedType={filteredTypes}
-                    />
-                    <br />
                     <SelectWrapperBlock
                         callback={(e) => this.displayFullscreenlist('displayFullscreenlist')}
                         iconDown='🔻'
@@ -574,7 +321,6 @@ class ModuleDownloadImages extends React.Component {
         if (!object) {
             return this.setState({
                 displayFullscreenlist: false,
-                displayFullscreenlistFilter: false
             });
         }
 
@@ -585,9 +331,6 @@ class ModuleDownloadImages extends React.Component {
             filteredTypes: object.value,
             currentPage: 0,
             displayFullscreenlist: false,
-            displayFullscreenlistFilter: false
-        }, () => {
-            this.getImagesFromTab(activeTabId);
         });
     }
 
@@ -600,7 +343,6 @@ class ModuleDownloadImages extends React.Component {
         if (!object) {
             return this.setState({
                 displayFullscreenlist: false,
-                displayFullscreenlistFilter: false
             });
         }
 
@@ -618,10 +360,7 @@ class ModuleDownloadImages extends React.Component {
             itemsPerSite,
             currentPage: 0,
             displayFullscreenlist: false,
-            displayFullscreenlistFilter: false
-        }, () => {
-            this.getImagesFromTab(activeTabId);
-        });
+        }, this.callback );
     }
 
     /**
@@ -632,9 +371,9 @@ class ModuleDownloadImages extends React.Component {
         const itemsToRenderJsx = [];
 
         for (let x = 0; x <= itemsToRender.length - 1; x++) {
-            let src = itemsToRender[x].source;
+            let src = itemsToRender[x];
 
-            if (src && typeof 'react' === typeof src) {
+            if (src && typeof '8' === typeof src) {
                 let link = src;
 
                 /**
@@ -657,8 +396,7 @@ class ModuleDownloadImages extends React.Component {
                 }
 
                 itemsToRenderJsx.push({
-                    source: link,
-                    type: itemsToRender[x].type
+                    source: link
                 });
             }
         }
@@ -666,79 +404,10 @@ class ModuleDownloadImages extends React.Component {
         this.setState({
             itemsToRenderJsx,
             animationLoading: false,
-        }, this.updateChart);
+            renderChart: true
+        }, this.updateChart );
     }
 
-    updateChart() {
-        let images = document.querySelectorAll('.images-to-save');
-        const data = [];
-        const labels = [];
-
-        if (images.length) {
-
-            setTimeout( () => {
-                images = document.querySelectorAll('.images-to-save');
-
-                for (let x = 0; x <= images.length - 1; x++) {
-                    const image: any = images[x];
-                    const width = image.naturalWidth || image.clientWidth || image.width;
-                    const height = image.naturalHeight || image.clientHeight || image.height;
-    
-                    labels.push(`${width}*${height}`);
-                    data.push(width*height);
-                }
-    
-                var barChartData = {
-                    labels,
-                    datasets: [
-                        {
-                            label: 'Images width * height',
-                            backgroundColor: '#36ACA3',
-                            data,
-                            fill: true
-                        }
-                    ],
-                    borderColor: [ "#36ACA3" ],
-                    borderWidth: 2
-                };
-    
-                if (this.canvasNode) {
-                    const ctx = this.canvasNode.getContext('2d');
-    
-                    new Chart(ctx, {
-                        type: 'line',
-                        data: barChartData,
-                        options: {
-                            maintainAspectRatio: false, // to make the chart responive and css max height working
-                            label: {
-                                display: true,
-                                text: 'Images width*height'
-                            },
-                            legend: {
-                                display: true
-                            },
-                            tooltips: {
-                                mode: 'index',
-                                intersect: false
-                            },
-                            responsive: true,
-                            scales: {
-                                xAxes: [{
-                                    stacked: true,
-                                }],
-                                yAxes: [{
-                                    stacked: true,
-                                    ticks: {
-                                        beginAtZero: true
-                                    }
-                                }]
-                            }
-                        }
-                    });
-                }
-            }, 500);
-        }
-    }
     /**
      * Get filetype from href as fallback
      * @param {string} href 
@@ -934,7 +603,7 @@ class ModuleDownloadImages extends React.Component {
      * Pack all images to zip file
      */
     packImages(currentImages: any, type: string = 'zip') {
-        const { sourceToIgnore, currentPage } = this.state;
+        const { currentPage } = this.state;
         const zip = new JSZip();
         const self = this;
 
@@ -942,7 +611,7 @@ class ModuleDownloadImages extends React.Component {
             for (let x = 0; x <= currentImages.length - 1; x++) {
                 const src = currentImages[x].getAttribute('src');
 
-                if (-1 !== src.indexOf('http://') || -1 !== src.indexOf('https://') && !sourceToIgnore[currentPage].includes(src)) {
+                if (-1 !== src.indexOf('http://') || -1 !== src.indexOf('https://')) {
 
                     if ('zip' == type) {
                         const img: any = await this.generateImages(src);
@@ -1095,55 +764,87 @@ class ModuleDownloadImages extends React.Component {
             })
     }
 
-    filterAvailableTypes() {
-        const { availableTypes } = this.state;
-        const filtered = [];
-        const temp = [];
+    removeImage(source){
+        let { items } = this.state;
+        items = items.filter( i => i != source);
 
-        availableTypes.map((object: { value: any; text: string }) => {
-            if (!temp.includes(object.value)) {
-                temp.push(object.value);
-                filtered.push(object);
-            }
-        });
-
-        return filtered;
-    }
-
-    toggleIgnoreImage(object) {
-        const { source } = object;
-        let { sourceToIgnore, currentPage } = this.state;
-
-        if (sourceToIgnore[currentPage].includes(source)) {
-            sourceToIgnore[currentPage] = sourceToIgnore[currentPage].filter(i => i != source);
-        }
-        else {
-            sourceToIgnore[currentPage].push(source);
-        }
+        //@ts-ignore
+        browser.runtime.sendMessage({ action: 'remove-image-local-store', source });
 
         this.setState({
-            sourceToIgnore
-        });
+            items
+        }, this.callback);
     }
 
-    toggleStored(object) {
-        const { source } = object;
-        let { sourceStored } = this.state;
+    updateChart() {
+        let images = document.querySelectorAll('.images-to-save');
+        const data = [];
+        const labels = [];
 
-        if (sourceStored.includes(source)) {
-            sourceStored = sourceStored.filter(i => i != source);
-            //@ts-ignore
-            browser.runtime.sendMessage({ action: 'remove-image-local-store', source });
-        }
-        else {
-            sourceStored.push(source);
-            //@ts-ignore
-            browser.runtime.sendMessage({ action: 'set-image-local-store', source });
-        }
+        if (images.length) {
 
-        this.setState({
-            sourceStored
-        });
+            setTimeout( () => {
+                images = document.querySelectorAll('.images-to-save');
+
+                for (let x = 0; x <= images.length - 1; x++) {
+                    const image: any = images[x];
+                    const width = image.naturalWidth || image.clientWidth || image.width;
+                    const height = image.naturalHeight || image.clientHeight || image.height;
+    
+                    labels.push(`${width}*${height}`);
+                    data.push(width*height);
+                }
+    
+                var barChartData = {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Images width * height',
+                            backgroundColor: '#36ACA3',
+                            data,
+                            fill: true
+                        }
+                    ],
+                    borderColor: [ "#36ACA3" ],
+                    borderWidth: 2
+                };
+    
+                if (this.canvasNode) {
+                    const ctx = this.canvasNode.getContext('2d');
+    
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: barChartData,
+                        options: {
+                            maintainAspectRatio: false, // to make the chart responive and css max height working
+                            label: {
+                                display: true,
+                                text: 'Images width*height'
+                            },
+                            legend: {
+                                display: true
+                            },
+                            tooltips: {
+                                mode: 'index',
+                                intersect: false
+                            },
+                            responsive: true,
+                            scales: {
+                                xAxes: [{
+                                    stacked: true,
+                                }],
+                                yAxes: [{
+                                    stacked: true,
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                }
+            }, 500);
+        }
     }
 
     toggleChart(){
@@ -1158,49 +859,15 @@ class ModuleDownloadImages extends React.Component {
     }
 
     render() {
-        const availableTypes = this.filterAvailableTypes();
-        const { chartVisibility, activeTabId, renderChart, sourceStored, animationLoading, tabs, itemsToRenderJsx, items, displayFullscreenlist, displayFullscreenlistFilter, sourceToIgnore, currentPage } = this.state;
+        const { animationLoading, itemsToRenderJsx, items, displayFullscreenlist, currentPage, chartVisibility, renderChart } = this.state;
 
         return (
             <div className="DownloadImages">
                 {
                     animationLoading && <LoadingBoxTop />
                 }
-                {
-                    null !== activeTabId &&
-                    <div className="tabs-active flex">
-                        <div className="left">
-                            <ul>
-                                {
-                                    tabs.map(tab => {
-                                        const { url, id } = tab;
-
-                                        return (
-                                            <li
-                                                key={customKey()}
-                                                className="tab"
-                                            >
-                                                <Link
-                                                    key={customKey()}
-                                                    to={`/download-images?tabid=${id}`}
-                                                    onClick={(e) => this.getImagesFromTab(id, true)}
-                                                >
-                                                    <h2
-                                                        title={url}
-                                                        className="ff-title h1"
-                                                    >
-                                                        {
-                                                            this.getOnlyDomainName(url)
-                                                        }
-                                                    </h2>
-                                                </Link>
-                                            </li>
-                                        );
-                                    })
-                                }
-                            </ul>
-                        </div>
-                        <div className="right">
+                    <div className="tabs-active">
+                        <div className="right w-100">
                             {
                                 this.getPagerJsx()
                             }
@@ -1211,12 +878,6 @@ class ModuleDownloadImages extends React.Component {
                                 </div>
                             }
                             {
-                                this.state.hostname &&
-                                <h1 className="ff-title h1 text-center">
-                                    {`${this.state.hostname} `} <i className="fas fa-chart-area" onClick={() => this.toggleChart()}></i>
-                                </h1>
-                            }
-                            {
                                 undefined !== items && 0 !== items.length && 0 !== this.getMaxPages() &&
                                 <h1 className="ff-title h1-sites text-center">
                                     {`${this.translations.page} ${currentPage + 1} ${this.translations.of} ${this.getMaxPages()}`}
@@ -1224,8 +885,8 @@ class ModuleDownloadImages extends React.Component {
                             }
                             {
                                 0 !== items.length &&
-                                <h1 className="ff-title h1-sites text-center">
-                                    {`${items.length} ${this.translations.images}`}
+                                <h1 className="ff-title h1 h1-sites text-center">
+                                    {`${items.length} ${this.translations.images} `} <i className="fas fa-chart-area" onClick={() => this.toggleChart()}></i>
                                 </h1>
                             }
                             {
@@ -1234,27 +895,21 @@ class ModuleDownloadImages extends React.Component {
                             }
                             {
                                 0 !== itemsToRenderJsx.length &&
-                                itemsToRenderJsx.map(object => {
-                                    const { source, type } = object;
-                                    const removed = sourceToIgnore[currentPage].includes(source);
-                                    const stored = sourceStored.includes(source);
+                                itemsToRenderJsx.map( object => {
+                                    const { source } = object;
 
                                     return (
                                         <div
                                             key={customKey()}
-                                            className={`image-box ${removed ? 'dimmed' : ''}`}
+                                            className='image-box'
                                             title={source}
                                         >
                                             <i
-                                                className={`${removed ? 'fas fa-undo restore-image' : 'fas fa-trash remove-image'}`}
-                                                title={`${removed ? this.translations.restoreExclude : this.translations.exclude}`}
-                                                onClick={() => this.toggleIgnoreImage(object)}
+                                                className='fas fa-trash remove-image'
+                                                title={this.translations.removeFromFavourites}
+                                                onClick={() => this.removeImage(source)}
                                             />
-                                            <i
-                                                className={`${stored ? 'fas fa-star remove-stored' : 'far fa-star store'}`}
-                                                title={`${stored ? this.translations.removeFromFavourites : this.translations.saveToFavourites}`}
-                                                onClick={() => this.toggleStored(object)}
-                                            />
+
                                             <img alt='image' className="images-to-save" src={source} />
 
                                             <div className="text">
@@ -1263,9 +918,7 @@ class ModuleDownloadImages extends React.Component {
                                                 }
                                             </div>
                                             <div className="type">
-                                                {
-                                                    type
-                                                }
+                                                localStorage
                                             </div>
                                             <div className="options">
                                                 <i
@@ -1291,16 +944,6 @@ class ModuleDownloadImages extends React.Component {
                             }
                         </div>
                     </div>
-                }
-                <FullScreenList
-                    data={availableTypes}
-                    closeIcon="✖"
-                    callback={this.setType}
-                    display={displayFullscreenlistFilter}
-                    inputActive={true}
-                    inputPlaceholder={'Filter....'}
-                    noDataText=' 🗯 '
-                />
                 <FullScreenList
                     data={
                         [
@@ -1418,4 +1061,4 @@ class ModuleDownloadImages extends React.Component {
     }
 };
 
-export default ModuleDownloadImages;
+export default ModuleStoredImages;
