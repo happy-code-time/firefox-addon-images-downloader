@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "ImageDownloader",
-  "version": "3.0.1",
+  "name": "Image Downloader",
+  "version": "3.0.2",
   "description": "Image Downloader",
   "browser_action": {
     "browser_style": true,
@@ -22,7 +22,7 @@
         "<all_urls>"
       ],
       "js": [
-        "Distribution/Content/content.js"
+        "Distribution/Content/content.bundle.v3.0.2.js"
       ]
     }
   ],

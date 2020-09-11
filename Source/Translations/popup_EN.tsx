@@ -541,7 +541,15 @@ const EN={
   countriesNotFoundText: 'Sorry, no countries found',
   dropText: 'Drop here',
   error: 'Error',
-  languages: 'Languages'
+  languages: 'Languages',
+  allowToSave: 'Allow to generate a download button on each page for each image (Check for new images each 10 seconds).',
+  settings: 'Settings',
+  downloadicon: 'Set a custom download icon.',
+  allowGifs: 'Allow to generate the download button for gif`s.',
+  allowPngs: 'Allow to generate the download button for png`s.',
+  allowJpgs: 'Allow to generate the download button for jpg`s.',
+  filterByImagesWidth: 'Allow download generation for photos whose width (X - axis) is greater than / or equal to this value. Negative values (-1 or 0) are ignored.',
+  filterByImagesHeight: 'Allow the download generation for photos whose height (Y - axis) is greater than / or equal to this value. Negative values (-1 or 0) are ignored.'
 };
 
 export default EN;

@@ -14,6 +14,8 @@ import Menu from '../AppFiles/Modules/Menu';
 
 import Home from './pages/Home';
 
+import Settings from './pages/Settings';
+
 import ImagesTag from './pages/ImagesTag';
 
 import ImagesRequests from './pages/ImagesRequests';
@@ -122,7 +124,12 @@ class App extends Component {
                         text: this.translations.img_requests,
                         icon: <i className="far fa-image" />,
                         href: `${addonPrefixPopup()}#/images-by-requests`,
-                      }
+                      },
+                      {
+                        text: this.translations.settings,
+                        icon: <i className="fas fa-cog" />,
+                        href: `${addonPrefixPopup()}#/settings`,
+                      },
                     ]
                   }
                 />
@@ -172,6 +179,7 @@ class App extends Component {
                     <Route exact path="/" component={Home} />
                     <Route exact path="/images-by-img-tag" component={ImagesTag} />
                     <Route exact path="/images-by-requests" component={ImagesRequests} />
+                    <Route exact path="/settings" component={Settings} />
                   </Switch>
                 </HashRouter>
               }

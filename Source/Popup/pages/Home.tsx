@@ -41,7 +41,8 @@ class Home extends React.Component<WebsiteContainerProps> {
             loginRequired: this.props.loginRequired,
             redirectAfterLogin: this.props.redirectAfterLogin ? this.props.redirectAfterLogin : '',
             images: 0,
-            tabid: ''
+            tabid: '',
+            randomImage: this.getRandomImage()
         };
 
         this.translations = getTranslations();
@@ -171,20 +172,28 @@ class Home extends React.Component<WebsiteContainerProps> {
             })
     }
 
+    getRandomImage(){
+        const images = [
+            'beata-ratuszniak--6mZyblCys4-unsplash.jpg',
+            'chuttersnap-E8pm9NKWbJM-unsplash.jpg',
+            'dan-gold-mgaS4FlsYxQ-unsplash.jpg',
+            'juan-miguel-sevilla-morales-6lcWT0uETK8-unsplash.jpg'
+        ];
+
+        return images[Math.floor((Math.random() * images.length-1) + 1)];
+    }
+
     render(): JSX.Element {
-        const { tabid, images } = this.state;
+        const { tabid, images, randomImage } = this.state;
 
         return (
             <div className="ContentBody ContentStaticHeight Home">
-                <img className="Images-image" src={`${addonRoot()}/Images/kelvin-zyteng-4ypfR5V5nR4-unsplash.jpg`} />
+                <div className="Images">
+                    <img className="Images-image" src={`${addonRoot()}Images/${randomImage}`} />
+                </div>
                 {
                     0 !== images &&
                     <span>
-                        <h1 className="ff-title text-center">
-                            {
-                                this.translations.imagesPopupTitle
-                            }
-                        </h1>
                         <div className="images-count text-center">
                             {
                                 images

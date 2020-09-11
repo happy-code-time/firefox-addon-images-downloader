@@ -1,19 +1,19 @@
 const path = require('path');
 
 const ENTRY_DASHBOARD = {
-    in: path.resolve(__dirname, './Source/Popup/index.tsx'),
-    out: path.resolve(__dirname, './Distribution/Popup/')
+    in: path.resolve(__dirname, './Source/Content/content.tsx'),
+    out: path.resolve(__dirname, './Distribution/Content/')
 };
 
 const config = {
-    mode: 'development',
+    mode: 'production',
     resolve: {
         extensions: [ '.tsx', '.ts', '.js' ],
     },
     entry: ['babel-polyfill', ENTRY_DASHBOARD.in ],
     output: {
         path: ENTRY_DASHBOARD.out,
-        filename: 'app.bundle.v3.0.2.js',
+        filename: 'content.bundle.v3.0.2.js',
     },
     cache: false,
     devtool: false,
@@ -46,6 +46,7 @@ const config = {
         'cheerio': 'window',
         'react/lib/ExecutionEnvironment': true,
         'react/lib/ReactContext': true,
+        'moment': 'moment'
     }
 };
 

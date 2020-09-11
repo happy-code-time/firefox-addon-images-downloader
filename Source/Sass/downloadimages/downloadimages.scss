@@ -4,6 +4,9 @@
 
   .NoDataImages {
     h1 {
+      background-color: rgba(66,66,66,.77);
+      box-sizing: border-box;
+      padding: 10px;
       text-align: center;
     }
   }
@@ -251,6 +254,7 @@
             text-overflow: ellipsis;
             margin: 0;
             padding: 0;
+            white-space: nowrap;
           }
         }
 
@@ -290,7 +294,7 @@
       .image-box {
         width: calc(100% - 40px);
         height: 340px;
-        margin: 20px;
+        margin: 10px;
         display: inline-block;
         border-radius: 5px;
         border: 1px solid $border_color;
@@ -447,13 +451,13 @@
   
       @media screen and (min-width: 1400px){
         .image-box {
-          width: calc(33% - 40px);
+          width: calc(24% - 20px);
         }
       }
   
       @media screen and (min-width: 1600px){
         .image-box {
-          width: calc(19% - 35px);
+          width: calc(20% - 30px);
         }
       }
 

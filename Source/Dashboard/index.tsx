@@ -6,13 +6,13 @@ import ReactDOM from 'react-dom';
 
 import ModuleSideBar from '../AppFiles/Modules/SideBar';
 
-import Home from './pages/Home';
-
 import DownloadImages from './pages/DownloadImages';
 
 import Tabs from './pages/Tabs';
 
 import Stored from './pages/Stored';
+
+import Settings from './pages/Settings';
 
 import ErrorMessagesLearnMore from './pages/ErrorMessagesLearnMore';
 
@@ -79,20 +79,20 @@ class App extends Component {
                   data={
                     [
                       {
-                        icon: <i className="fas fa-user" />,
-                        text: this.translations.home,
-                        href: `${addonPrefixDashboard()}#/`,
-                      },
-                      {
                         icon: <i className="fas fa-images" />,
                         text: this.translations.menu_text_download_images,
-                        href: `${addonPrefixDashboard()}#/tabs`,
+                        href: `${addonPrefixDashboard()}#/`,
                       },
                       {
                         icon: <i className="fas fa-database" />,
                         text: this.translations.menu_text_images_favourites,
                         href: `${addonPrefixDashboard()}#/stored`,
-                      }
+                      },
+                      {
+                        text: this.translations.settings,
+                        icon: <i className="fas fa-cog" />,
+                        href: `${addonPrefixDashboard()}#/settings`,
+                      },
                     ]
                   }
                 />
@@ -133,11 +133,11 @@ class App extends Component {
           contentData={
             <HashRouter>
               <Switch>
-                <Route exact path="/" component={Home} />
-                <Route exact path="/tabs" component={Tabs} />
+                <Route exact path="/" component={Tabs} />
                 <Route exact path="/download-images" component={DownloadImages} />
                 <Route exact path="/stored" component={Stored} />
                 <Route exact path="/error-messages-learn-more" component={ErrorMessagesLearnMore} />
+                <Route exact path="/settings" component={Settings} />
               </Switch>
             </HashRouter>
           }

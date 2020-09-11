@@ -19,4 +19,30 @@ body {
     flex-direction: flex-start;
     overflow-x: hidden;
   }
+
+  .Settings{
+
+    input[type=number]{
+      margin: 20px 0;
+      height: 40px;
+    }
+    
+    ul{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li{
+        list-style: none;
+        box-sizing: border-box;
+        padding: 5px;
+
+        p{
+          padding-left: 10px;
+          font-size: 0.87rem;
+          color: $dark-text;
+        }
+      }
+    }
+  }
 }

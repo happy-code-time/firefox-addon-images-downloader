@@ -1,13 +1,15 @@
 {
   "name": "imagedownloader",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Image Downloader",
   "scripts": {
     "compile": "./node_modules/.bin/gulp compile",
     "build:dashboard:dev": "node ./node_modules/.bin/webpack --config webpack.dashboard.dev.js --mode development --module-bind js=babel-loader --watch-poll --watch --colors --progress",
     "build:dashboard": "node ./node_modules/.bin/webpack --config webpack.dashboard.prod.js --mode production",
     "build:popup:dev": "node ./node_modules/.bin/webpack --config webpack.popup.dev.js --mode development --module-bind js=babel-loader --watch-poll --watch --colors --progress",
-    "build:popup": "node ./node_modules/.bin/webpack --config webpack.popup.prod.js --mode production"
+    "build:popup": "node ./node_modules/.bin/webpack --config webpack.popup.prod.js --mode production",
+    "build:content:dev": "node ./node_modules/.bin/webpack --config webpack.content.dev.js --mode development --module-bind js=babel-loader --watch-poll --watch --colors --progress",
+    "build:content": "node ./node_modules/.bin/webpack --config webpack.content.prod.js --mode production"
   },
   "author": "David Janitzek",
   "license": "MIT",
@@ -72,6 +74,7 @@
     "jszip-utils": "^0.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-revolution": "^1.1.3",
     "react-router-dom": "^5.1.2",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",

@@ -149,11 +149,88 @@ if(!getItem('localImages')){
   setItemToLocalStorage('localImages', []);  
 }
 
+if(null == getItem('allow-to-download')){
+  setItemToLocalStorage('allow-to-download', false);
+}
+
+if(null == getItem('allowGifs')){
+  setItemToLocalStorage('allowGifs', false);
+}
+
+if(null == getItem('allowJpgs')){
+  setItemToLocalStorage('allowJpgs', true);
+}
+
+if(null == getItem('allowPngs')){
+  setItemToLocalStorage('allowPngs', true);
+}
+
+if(null == getItem('filterByImagesWidth')){
+  localStorage.setItem('filterByImagesWidth', '');
+}
+
+if(null == getItem('filterByImagesHeight')){
+  localStorage.setItem('filterByImagesHeight', '');
+}
+
+if(null == localStorage.getItem('downloadicon')){
+  localStorage.setItem('downloadicon', '📷');
+}
+
 //@ts-ignore
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const { tab } = sender;
 
   switch (request.action) {
+    case 'get-all' : {
+      return sendResponse({
+        downloadicon: localStorage.getItem('downloadicon'),
+        allowToSave: getItem('allow-to-download'),
+        allowGifs: getItem('allowGifs'),
+        allowPngs: getItem('allowPngs'),
+        allowJpgs: getItem('allowJpgs'),
+        filterByImagesWidth: getItem('filterByImagesWidth'),
+        filterByImagesHeight: getItem('filterByImagesHeight'),
+        
+      });
+      break;
+    }
+    case 'set-filterByImagesWidth' : {
+      return sendResponse(setItemToLocalStorage('filterByImagesWidth', request.value));
+      break;
+    }
+    case 'set-filterByImagesHeight' : {
+      return sendResponse(setItemToLocalStorage('filterByImagesHeight', request.value));
+      break;
+    }
+    case 'set-allowJpgs' : {
+      return sendResponse(localStorage.setItem('allowJpgs', request.allowJpgs));
+      break;
+    }
+    case 'set-allowPngs' : {
+      return sendResponse(localStorage.setItem('allowPngs', request.allowPngs));
+      break;
+    }
+    case 'set-allowGifs' : {
+      return sendResponse(localStorage.setItem('allowGifs', request.allowGifs));
+      break;
+    }
+    case 'set-download-icon' : {
+      return sendResponse(localStorage.setItem('downloadicon', request.downloadicon));
+      break;
+    }
+    case 'get-download-icon' : {
+      return sendResponse(getItem('downloadicon'));
+      break;
+    }
+    case 'set-allow-to-download' : {
+      return sendResponse(setItemToLocalStorage('allow-to-download', request.allowToSave));
+      break;
+    }
+    case 'get-allow-to-download' : {
+      return sendResponse(getItem('allow-to-download'));
+      break;
+    }
     case 'set-image-local-store' : {
       const localImages = getItem('localImages');
       const { source } = request;

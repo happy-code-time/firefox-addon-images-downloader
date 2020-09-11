@@ -544,7 +544,15 @@ const DE = {
   countriesNotFoundText: 'Sorry, dieses Land habe ich nicht gefunden',
   dropText: 'Hier loslassen',
   error: 'Fehler',
-  languages: 'Sprachen'
+  languages: 'Sprachen',
+  allowToSave: 'Erlaube die Generierung eines Download Buttons auf der Hauptseite, bei jedem Foto (Prüfung neuer Fotos jede 10 Sekunden).',
+  settings: 'Einstellungen',
+  downloadicon: 'Setzte ein Benutzerdefiniertes Download Icon.',
+  allowGifs: 'Erlaube die Download Generierung für gif`s.',
+  allowPngs: 'Erlaube die Download Generierung für png`s.',
+  allowJpgs: 'Erlaube die Download Generierung für jpg`s.',
+  filterByImagesWidth: 'Erlaube die Download Generierung für Fotos deren Breite (X - Achse) die gößer/ oder gleich sind als dieser Wert. Die negativen werte (-1 oder 0) werden ignoriert.',
+  filterByImagesHeight: 'Erlaube die Download Generierung für Fotos deren Höhe (Y - Achse) die gößer/ oder gleich sind als dieser Wert. Die negativen werte (-1 oder 0) werden ignoriert.'
 };
 
 export default DE;

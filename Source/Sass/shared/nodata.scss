@@ -77,6 +77,11 @@
     max-width: 90%;
     margin: 50px 5%;
     text-align: center;
+    background-color: rgba(66,66,66,.77);
+    box-sizing: border-box;
+    padding: 10px;
+    color: $white !important;
+    border-radius: 5px;
   }
 
   img{

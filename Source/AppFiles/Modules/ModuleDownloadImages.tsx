@@ -1190,7 +1190,7 @@ class ModuleDownloadImages extends React.Component {
                                                         className="ff-title h1"
                                                     >
                                                         {
-                                                            this.getOnlyDomainName(url)
+                                                            url
                                                         }
                                                     </h2>
                                                 </Link>

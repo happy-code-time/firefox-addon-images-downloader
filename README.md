@@ -4,9 +4,20 @@
     npm cache clear --force
     npm install
     
-## Add html files, background and content script 
+## Add html files, background script 
 
     npm run compile
+
+## Content script
+
+- Work on the content window in `production` mode
+    
+        npm run build:content
+
+- Work on the content window in `development` mode
+    
+        npm run build:content:dev
+
 
 ## Popup window (React scripts)
 

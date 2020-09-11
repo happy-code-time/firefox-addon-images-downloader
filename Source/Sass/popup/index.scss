@@ -28,6 +28,8 @@
 
 @import '../shared/AddonNotAvailable';
 
+@import '../rr-full-screen-list-array';
+
 @import '../loading';
 
 @import './images';
@@ -279,5 +281,33 @@ body,
   .Content.minified {
     left: 0;
   }
+
+  .rr-fullscreenlist .text:hover,
+  .pointer:hover{
+    cursor: pointer;
+  }
+  
+  .rr-fullscreenlist{
+  
+    .content{
+      min-width: 200px;
+      width: 200px;
+    }
+  
+    ul{
+      height: calc(100% - 2px);
+      min-width: 90%;
+  
+      li{
+        float: left;
+        min-width: 45px;
+        width: 45px;
+        padding-left: 10px;
+        text-align: center;
+        font-size: 1.23rem;
+      }
+    }
+  }
+
 }
 

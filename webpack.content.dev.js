@@ -1,8 +1,8 @@
 const path = require('path');
 
 const ENTRY_DASHBOARD = {
-    in: path.resolve(__dirname, './Source/Popup/index.tsx'),
-    out: path.resolve(__dirname, './Distribution/Popup/')
+    in: path.resolve(__dirname, './Source/Content/content.tsx'),
+    out: path.resolve(__dirname, './Distribution/Content/')
 };
 
 const config = {
@@ -13,7 +13,7 @@ const config = {
     entry: ['babel-polyfill', ENTRY_DASHBOARD.in ],
     output: {
         path: ENTRY_DASHBOARD.out,
-        filename: 'app.bundle.v3.0.2.js',
+        filename: 'content.bundle.v3.0.2.js',
     },
     cache: false,
     devtool: false,

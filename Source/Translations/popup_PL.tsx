@@ -543,7 +543,15 @@ const PL = {
   countriesNotFoundText: 'Przepraszam, nie znalazłem takiego kraju',
   dropText: 'Upuść tutaj',
   error: 'Błąd',
-  languages: 'Języki'
+  languages: 'Języki',
+  allowToSave: 'Zezwól na generowanie przycisku pobierania na każdej stronie dla każdego obrazu (Sprawdzanie nowych obrazów odbywa się co 10 sekund).',
+  settings: 'Ustawienia',
+  downloadicon: 'Ustaw ikonka do pobierania.',
+  allowGifs: 'Zezwól na generowanie przycisku pobierania dla plików gif.',
+  allowPngs: 'Zezwól na generowanie przycisku pobierania dla plików png.',
+  allowJpgs: 'Zezwól na generowanie przycisku pobierania dla plików jpg.',
+  filterByImagesWidth: 'Zezwalaj na generowanie pobierania zdjęć, których szerokość (oś X) jest większa niż / lub równa tej wartości. Wartości ujemne (-1 lub 0) są ignorowane.',
+  filterByImagesHeight: 'Zezwalaj na generowanie pobierania zdjęć, których wysokość (oś Y) jest większa lub równa tej wartości. Wartości ujemne (-1 lub 0) są ignorowane.'
 };
 
 export default PL;

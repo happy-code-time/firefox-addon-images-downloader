@@ -32,6 +32,8 @@
 
 @import './examples';
 
+@import '../rr-full-screen-list-array';
+
 html,
 body,
 #app {
@@ -55,6 +57,7 @@ body {
     font-size: 0.923rem;
   }
   
+
   .Home {
     img {
       display: block;
@@ -80,6 +83,64 @@ body {
           margin-right: 30px;
           font-size: 1.43rem;
         }
+      }
+    }
+  }
+
+  .Settings{
+    ul{
+      max-width: 100%;
+    }
+  }
+
+  .Settings{
+
+    input[type=number]{
+      margin: 20px 0;
+      height: 40px;
+    }
+    
+    ul{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li{
+        list-style: none;
+        box-sizing: border-box;
+        padding: 5px;
+
+        p{
+          padding-left: 10px;
+          font-size: 0.87rem;
+          color: $dark-text;
+        }
+      }
+    }
+  }
+  .rr-fullscreenlist .text:hover,
+  .pointer:hover{
+    cursor: pointer;
+  }
+  
+  .rr-fullscreenlist{
+  
+    .content{
+      min-width: 200px;
+      width: 200px;
+    }
+  
+    ul{
+      height: calc(100% - 2px);
+      min-width: 90%;
+  
+      li{
+        float: left;
+        min-width: 45px;
+        width: 45px;
+        padding-left: 10px;
+        text-align: center;
+        font-size: 1.23rem;
       }
     }
   }

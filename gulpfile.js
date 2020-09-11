@@ -65,17 +65,6 @@ gulp.task('copy:background', function (done) {
 });
 
 /**
- * Copy content script
- */
-gulp.task('copy:content', function (done) {
-    gulp.src([
-        './Source/Content/content.js'
-    ])
-        .pipe(gulp.dest('./Distribution/Content/'));
-    done();
-});
-
-/**
  * Compress images
  */
 gulp.task('compress:images', function (done) {
@@ -100,7 +89,6 @@ gulp.task('compile', function (callback) {
             'copy:css',
             'copy:html',
             'copy:background',
-            'copy:content',
             'compress:images'
         ],
         callback);
