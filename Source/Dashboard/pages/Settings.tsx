@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import getTranslations from '../../Translations/index';
 
-import { FullScreenListArray } from 'react-revolution';
+import { FullScreenListArray, uuid } from 'react-revolution';
 
 interface WebsiteContainerProps {
     contentData?: string | any;
@@ -24,11 +24,9 @@ class Settings extends React.Component<WebsiteContainerProps> {
 
     constructor(props: WebsiteContainerProps) {
         super(props);
-        this.toggleAllowToSave = this.toggleAllowToSave.bind(this);
         this.getCurrentData = this.getCurrentData.bind(this);
         this.callback = this.callback.bind(this);
         this.toggleList = this.toggleList.bind(this);
-        this.toggleAllowGifs = this.toggleAllowGifs.bind(this);
         this.setValue = this.setValue.bind(this);
 
         this.state = {
@@ -38,8 +36,12 @@ class Settings extends React.Component<WebsiteContainerProps> {
             allowGifs: false,
             allowPngs: false,
             allowJpgs: false,
+            allowSvgs: false,
+            allowIcos: false,
+            allowWebp: false,
             filterByImagesWidth: 0,
             filterByImagesHeight: 0,
+            downloadiconsize: 16
         };
 
         this.translations = getTranslations();
@@ -53,8 +55,7 @@ class Settings extends React.Component<WebsiteContainerProps> {
         //@ts-ignore
         browser.runtime.sendMessage({ action: 'get-all' })
             .then(data => {
-
-                let { downloadicon, allowToSave, allowGifs, allowPngs, allowJpgs, filterByImagesWidth, filterByImagesHeight } = data;
+                let { downloadicon, allowToSave, allowGifs, allowPngs, allowJpgs, allowSvgs, allowIcos, allowWebp, filterByImagesWidth, filterByImagesHeight, downloadiconsize } = data;
 
                 if (allowToSave) {
                     allowToSave = true;
@@ -69,8 +70,12 @@ class Settings extends React.Component<WebsiteContainerProps> {
                     allowGifs,
                     allowPngs,
                     allowJpgs,
+                    allowSvgs, 
+                    allowIcos, 
+                    allowWebp,
                     filterByImagesWidth,
-                    filterByImagesHeight
+                    filterByImagesHeight,
+                    downloadiconsize
                 });
 
             })
@@ -79,48 +84,27 @@ class Settings extends React.Component<WebsiteContainerProps> {
             });
     }
 
-    toggleAllowToSave(e) {
-        let allowToSave = false;
+    toggleOption(e, key){
+        const allowedKeys = [
+            'allowToSave',
+            'allowJpgs',
+            'allowPngs',
+            'allowGifs',
+            'allowSvgs',
+            'allowIcos',
+            'allowWebp'
+        ];
+
+        let allow = false;
 
         if (e.target.checked) {
-            allowToSave = true;
+            allow = true;
         }
 
-        //@ts-ignore
-        browser.runtime.sendMessage({ action: 'set-allow-to-download', allowToSave }).then( this.getCurrentData).catch( this.getCurrentData)
-    }
-
-    toggleAllowGifs(e) {
-        let allowGifs = false;
-
-        if (e.target.checked) {
-            allowGifs = true;
+        if(allowedKeys.includes(key)){
+            //@ts-ignore
+            return browser.runtime.sendMessage({ action: `set-${key}`, allow }).then( this.getCurrentData).catch( this.getCurrentData)            
         }
-
-        //@ts-ignore
-        browser.runtime.sendMessage({ action: 'set-allowGifs', allowGifs }).then( this.getCurrentData).catch( this.getCurrentData)
-    }
-
-    toggleAllowPngs(e) {
-        let allowPngs = false;
-
-        if (e.target.checked) {
-            allowPngs = true;
-        }
-
-        //@ts-ignore
-        browser.runtime.sendMessage({ action: 'set-allowPngs', allowPngs }).then( this.getCurrentData).catch( this.getCurrentData)
-    }
-
-    toggleAllowJpgs(e) {
-        let allowJpgs = false;
-
-        if (e.target.checked) {
-            allowJpgs = true;
-        }
-
-        //@ts-ignore
-        browser.runtime.sendMessage({ action: 'set-allowJpgs', allowJpgs }).then( this.getCurrentData).catch( this.getCurrentData)
     }
 
     callback(clickEvent, downloadicon) {
@@ -141,9 +125,6 @@ class Settings extends React.Component<WebsiteContainerProps> {
     setValue(e, key){
         const value = e.target.value;
 
-        console.log(value);
-        console.log(key);
-
         this.setState({
             [key]: parseInt(value)
         }, () => {
@@ -155,7 +136,7 @@ class Settings extends React.Component<WebsiteContainerProps> {
     }
 
     render(): JSX.Element {
-        const { allowToSave, downloadicon, display, allowGifs, allowPngs, allowJpgs } = this.state;
+        const { downloadicon, display } = this.state;
         let { filterByImagesWidth, filterByImagesHeight } = this.state;
 
         if(!filterByImagesWidth){
@@ -165,6 +146,22 @@ class Settings extends React.Component<WebsiteContainerProps> {
         if(!filterByImagesHeight){
             filterByImagesHeight = 0;
         }
+
+        const toggleAutogenerationItems = [
+            'allowToSave',
+            'allowJpgs',
+            'allowPngs',
+            'allowGifs',
+            'allowSvgs',
+            'allowIcos',
+            'allowWebp'
+        ];
+
+        const numberInputs = [
+            'downloadiconsize',
+            'filterByImagesWidth',
+            'filterByImagesHeight'
+        ];
 
         return (
             <div className="ContentBody ContentStaticHeight Home Settings">
@@ -190,55 +187,10 @@ class Settings extends React.Component<WebsiteContainerProps> {
                             animation='top' // scale, top, right, bottom, left 
                             data={
                                 [
-                                    '↓',
-                                    '⬇',
-                                    '🔰',
-                                    '🔻',
-                                    '🔽',
-                                    '🔥',
-                                    '⚡',
-                                    '💧',
-                                    '🍀',
-                                    '🐉',
-                                    '🤖',
-                                    '📷',
-                                    '🤬 ',
-                                    '🤯 ',
-                                    '😷 ',
-                                    '👽 ',
-                                    '👹 ',
-                                    '👿 ',
-                                    '🤓 ',
-                                    '👾 ',
-                                    '🦄 ',
-                                    '🐙 ',
-                                    '🦂 ',
-                                    '🍄 ',
-                                    '🌼 ',
-                                    '🌻 ',
-                                    '🌷 ',
-                                    '💐 ',
-                                    '🌪 ',
-                                    '🌈 ',
-                                    '🌝 ',
-                                    '🍺 ',
-                                    '🍹 ',
-                                    '🍔 ',
-                                    '🍟 ',
-                                    '🍕 ',
-                                    '🥪 ',
-                                    '🌭 ',
-                                    '🎯 ',
-                                    '🗽 ',
-                                    '🗼 ',
-                                    '🗿 ',
-                                    '🚧 ',
-                                    '🔵 ',
-                                    '🔴 ',
-                                    '⚫ ',
-                                    '🔳 ',
-                                    '⬜ ',
-                                    '⬛',
+                                    '↓','⬇','🔰','🔻','🔽','🔥','⚡','💧','🍀','🐉','🤖','📷','🤬 ','🤯 ','😷 ','👽 ','👹 ',
+                                    '👿 ','🤓 ','👾 ','🦄 ','🐙 ','🦂 ','🍄 ','🌼 ','🌻 ','🌷 ','💐 ','🌪 ','🌈 ','🌝 ',
+                                    '🍺 ','🍹 ','🍔 ','🍟 ','🍕 ','🥪 ','🌭 ','🎯 ','🗽 ','🗼 ','🗿 ','🚧 ','🔵 ','🔴 ',
+                                    '⚫ ','🔳 ','⬜ ','⬛',
                                 ]
                             }
                         />
@@ -251,84 +203,46 @@ class Settings extends React.Component<WebsiteContainerProps> {
                             }
                         </p>
                     </li>
-                    <li className='flex'>
-                        <input
-                            className='pointer'
-                            type='checkbox'
-                            onChange={(e) => this.toggleAllowToSave(e)}
-                            checked={allowToSave}
-                        />
-                        <p>
-                            {
-                                this.translations.allowToSave
-                            }
-                        </p>
-                    </li>
-                    <li className='flex'>
-                        <input
-                            className='pointer'
-                            type='checkbox'
-                            onChange={(e) => this.toggleAllowJpgs(e)}
-                            checked={allowJpgs}
-                        />
-                        <p>
-                            {
-                                this.translations.allowJpgs
-                            }
-                        </p>
-                    </li>
-                    <li className='flex'>
-                        <input
-                            className='pointer'
-                            type='checkbox'
-                            onChange={(e) => this.toggleAllowPngs(e)}
-                            checked={allowPngs}
-                        />
-                        <p>
-                            {
-                                this.translations.allowPngs
-                            }
-                        </p>
-                    </li>
-                    <li className='flex'>
-                        <input
-                            className='pointer'
-                            type='checkbox'
-                            onChange={(e) => this.toggleAllowGifs(e)}
-                            checked={allowGifs}
-                        />
-                        <p>
-                            {
-                                this.translations.allowGifs
-                            }
-                        </p>
-                    </li>
-                    <li className='flex'>
-                        <input
-                            type='number'
-                            minLength={1}
-                            onChange={(e) => this.setValue(e, 'filterByImagesWidth')}
-                            value={filterByImagesWidth}
-                        />
-                        <p>
-                            {
-                                this.translations.filterByImagesWidth
-                            }
-                        </p>
-                    </li>
-                    <li className='flex'>
-                        <input
-                            minLength={1}
-                            type='number'
-                            onChange={(e) => this.setValue(e, 'filterByImagesHeight')}
-                            value={filterByImagesHeight}
-                        />
-                        <p>
-                            {
-                                this.translations.filterByImagesHeight
-                            }
-                        </p>
-                    </li>
+                    {
+                        toggleAutogenerationItems.map( key => {
+                            return (
+                                <li key={uuid()}
+                                    className='flex'
+                                >
+                                    <input
+                                        className='pointer'
+                                        type='checkbox'
+                                        onChange={(e) => this.toggleOption(e, key)}
+                                        checked={this.state[key]}
+                                    />
+                                    <p>
+                                        {
+                                            this.translations[key]
+                                        }
+                                    </p>
+                                </li>
+                            )
+                        })
+                    }
+                    {
+                        numberInputs.map( key => {
+                            return (
+                                <li className='flex'>
+                                    <input
+                                        type='number'
+                                        minLength={1}
+                                        onChange={(e) => this.setValue(e, key)}
+                                        value={this.state[key]}
+                                    />
+                                    <p>
+                                        {
+                                            this.translations[key]
+                                        }
+                                    </p>
+                                </li>
+                            )
+                        })
+                    }
                 </ul>
             </div>
         );

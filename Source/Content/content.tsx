@@ -19,51 +19,41 @@ window.onbeforeunload = () => {
   browser.runtime.sendMessage({ action: 'reset-data' });
 };
 
-/**
- * Download icon
- */
 let downloadicon = '🔰';
-//@ts-ignore
-browser.runtime.sendMessage({ action: 'get-all' }).then( data => { downloadicon = data.downloadicon });
-
-/**
- * Allow gifs or disable
- */
 let allowGifs = false;
-//@ts-ignore
-browser.runtime.sendMessage({ action: 'get-all' }).then( data => { allowGifs = data.allowGifs });
-
-/**
- * Allow pngs or disable
- */
 let allowPngs = true;
-//@ts-ignore
-browser.runtime.sendMessage({ action: 'get-all' }).then( data => { allowPngs = data.allowPngs });
-
-/**
- * Allow jpgs or disable
- */
 let allowJpgs = true;
-//@ts-ignore
-browser.runtime.sendMessage({ action: 'get-all' }).then( data => { allowJpgs = data.allowJpgs });
-
-/**
- * Filter by images width
- */
+let allowSvgs = false;
+let allowIcos = false;
+let allowWebp = false;
 let filterByImagesWidth = 0;
-//@ts-ignore
-browser.runtime.sendMessage({ action: 'get-all' }).then( data => { filterByImagesWidth = data.filterByImagesWidth });
-
-/**
- * Filter by images heigth
- */
 let filterByImagesHeight = 0;
+let downloadiconsize = 16;
+let globalLanguage = 'en';
+
 //@ts-ignore
-browser.runtime.sendMessage({ action: 'get-all' }).then( data => { filterByImagesHeight = data.filterByImagesHeight });
+browser.runtime.sendMessage({ action: 'get-all' }).then( data => { 
+  downloadicon = data.downloadicon;
+  allowGifs = data.allowGifs;
+  allowPngs = data.allowPngs;
+  allowJpgs = data.allowJpgs;
+  allowSvgs = data.allowSvgs;
+  allowIcos = data.allowIcos;
+  allowWebp = data.allowWebp;
+  filterByImagesWidth = data.filterByImagesWidth;
+  filterByImagesHeight = data.filterByImagesHeight;
+  downloadiconsize = data.downloadiconsize;
+  globalLanguage = data.globalLanguage;
+});
 
 let generatingDownloader = false;
 
-class ImagesManager {
+class ImagesManager 
+{
+  
+  constructor(){
+    this.generateSlider = this.generateSlider.bind(this);
+  }
 
   /**
    * Get filetype from href as fallback
@@ -179,10 +169,10 @@ class ImagesManager {
       });
   }
 
-  generateDownloader() {
+  generateDownloader(forceDownload = false) {
     const self = this;
 
-    if (generatingDownloader) {
+    if (generatingDownloader && !forceDownload) {
       return null;
     }
 
@@ -191,10 +181,10 @@ class ImagesManager {
     let canRender = true;
 
     for (let x = 0; x <= images.length - 1; x++) {
-
       const singleImage: any = images[x];
 
       if ('1' !== singleImage.getAttribute('imagesdownloader') && singleImage.src) {
+        canRender = true;
 
         try {
           const divArroundTheImage = document.createElement('DIV');
@@ -207,7 +197,7 @@ class ImagesManager {
 
           const downloadButton = document.createElement('div');
           downloadButton.textContent = downloadicon;
-          downloadButton.setAttribute('style', 'z-index: 999999; position: absolute; top: 5px; left: 5px; cursor: pointer; font-size: 21px; line-height: 1; text-align: left;');
+          downloadButton.setAttribute('style', `z-index: 999999; position: absolute; top: 5px; left: 5px; cursor: pointer; font-size: 21px; line-height: 1; text-align: left; font-size: ${downloadiconsize}px; `);
           
           downloadButton.addEventListener('click', (e) => {
             e.preventDefault();
@@ -252,6 +242,18 @@ class ImagesManager {
             canRender = false;
           }
 
+          if('svg' == this.getFileTypeFromHref(singleImage.src) && !allowSvgs){
+            canRender = false;
+          }
+
+          if('webp' == this.getFileTypeFromHref(singleImage.src) && !allowWebp){
+            canRender = false;
+          }
+
+          if('ico' == this.getFileTypeFromHref(singleImage.src) && !allowIcos){
+            canRender = false;
+          }
+
           const singleImageWidth = singleImage.naturalWidth || singleImage.clientWidth || singleImage.width;
           const singleImageHeight = singleImage.naturalHeight || singleImage.clientHeight || singleImage.height;
           
@@ -279,6 +281,187 @@ class ImagesManager {
 
     generatingDownloader = false;
     return null;
+  }
+
+  generateSlider(){
+    const self = this;
+    const generatedLinks = [];
+    const images = document.getElementsByTagName('IMG');
+
+    if(document.documentElement && images && images.length){
+    
+      try{
+        /**
+         * Remove slider
+         */
+        this.removeSlider();
+        /**
+         * Slider
+         */
+        const slider = document.createElement('DIV');
+        slider.setAttribute('id', 'image-downloader-slider');
+        slider.setAttribute('style', 'position: fixed; z-index: 9999999; left: 0; top: 0; width: 100vw; height: 100vh; overflow: hidden; background-color: rgba(0,0,0,0.66); ');
+        document.documentElement.appendChild(slider);
+        /**
+         * Left site
+         */
+        const left = document.createElement('DIV');
+        left.setAttribute('style', 'position: fixed; left: 0; top: 0; width: 250px; height: 100vh; overflow-x: hidden; overflow-y: auto; border-right: 1px solid #36ACA3; display: flex; flex-direction: column;');
+        /**
+         * Right site
+         */
+        const right = document.createElement('DIV');
+        right.setAttribute('style', 'position: fixed; left: 250px; top: 0; width: calc(100vw - 251px); height: 100vh; overflow: hidden;  display: flex;;');
+        /**
+         * Appends
+         */
+        slider.appendChild(left);
+        slider.appendChild(right);
+        /**
+         * Close icon
+         */
+        const closeIcon = document.createElement('DIV');
+        closeIcon.setAttribute('style', 'position: fixed; right: 20px; top: 10px; cursor: pointer; font-size: 28px;');
+
+        if('en' == globalLanguage){
+          closeIcon.setAttribute('title', 'Remove slider');
+        }
+        if('de' == globalLanguage){
+          closeIcon.setAttribute('title', 'Slider entfernen');
+        }
+        if('pl' == globalLanguage){
+          closeIcon.setAttribute('title', 'Usuń slider'); 
+        }
+
+        closeIcon.textContent = '❎';
+        closeIcon.addEventListener('click', this.removeSlider);
+        right.appendChild(closeIcon);
+        /**
+         * Generate images left site
+         */    
+        for (let x = 0; x <= images.length - 1; x++) {
+          const singleImage: any = images[x];
+
+          if(!generatedLinks.includes(singleImage.src)){
+            generatedLinks.push(singleImage.src);
+
+            const imagesDiv = document.createElement('DIV');
+            imagesDiv.setAttribute('style', 'width: auto; height: auto; max-width: 210px; margin: 10px 20px; border-radius: 5px; display: flex;');
+  
+            let src = singleImage.src;
+            let link = singleImage.src;
+            const { hostname, protocol } = window.location;
+  
+            /**
+             * Build valid link
+             */
+            if (-1 === src.indexOf('http://') && -1 === src.indexOf('https://') && -1 === src.indexOf('data:image') && -1 === src.indexOf('moz-extension://')) {
+  
+                if ('/' !== src.charAt(0)) {
+                    src = `/${src}`;
+                }
+  
+                link = `${protocol}//${hostname}${src}`;
+            }
+  
+            /**
+             * If the link has // - 2 slashes as prefix, remove them
+             */
+            if ('//' == src.substr(0, 2)) {
+                link = `${protocol}//${src.substr(2, src.length)}`;
+            }
+  
+            const targetImage = document.createElement('IMG');
+            targetImage.setAttribute('style', 'display: block; margin: auto; cursor: pointer;');
+            targetImage.setAttribute('src', link);
+  
+            targetImage.addEventListener('click', (e) => {
+              let target = document.getElementById('image-holder');
+
+              if(target){
+                target.parentElement.removeChild(target);
+              }
+
+              target = document.createElement('IMG');
+              target.setAttribute('id', 'image-holder');
+              target.setAttribute('style', 'display: block; margin: auto; max-width: 80vw; max-height: 80vh;');
+              target.setAttribute('src', link);
+              right.appendChild(target);
+
+              let targetDownload = document.getElementById('image-downloader-download');
+
+              if(targetDownload){
+                targetDownload.parentElement.removeChild(targetDownload);
+              }
+
+              targetDownload = document.createElement('DIV');
+              targetDownload.setAttribute('id', 'image-downloader-download');
+              targetDownload.setAttribute('style', 'position: fixed; right: 80px; top: 10px; cursor: pointer; font-size: 28px;');
+
+              if('en' == globalLanguage){
+                targetDownload.setAttribute('title', 'Download');
+              }
+              if('de' == globalLanguage){
+                targetDownload.setAttribute('title', 'Herunterladen');
+              }
+              if('pl' == globalLanguage){
+                targetDownload.setAttribute('title', 'Pobierz'); 
+              }
+
+              targetDownload.textContent = '📁';
+
+              targetDownload.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                e.stopPropagation();    
+                self.saveImage(link);
+              });
+
+
+              let targetOpenInNewTab = document.getElementById('image-downloader-open-in-new-tab');
+
+              if(targetOpenInNewTab){
+                targetOpenInNewTab.parentElement.removeChild(targetOpenInNewTab);
+              }
+
+              targetOpenInNewTab = document.createElement('A');
+              targetOpenInNewTab.setAttribute('id', 'image-downloader-open-in-new-tab');
+              targetOpenInNewTab.setAttribute('style', 'position: fixed; right: 140px; top: 10px; cursor: pointer; font-size: 28px; text-decoration: none;');
+              targetOpenInNewTab.setAttribute('href', link);
+              targetOpenInNewTab.setAttribute('target', '_blank');
+              targetOpenInNewTab.textContent = '👀';
+
+              if('en' == globalLanguage){
+                targetOpenInNewTab.setAttribute('title', 'Open in new tab');
+              }
+              if('de' == globalLanguage){
+                targetOpenInNewTab.setAttribute('title', 'Im neuen Tab öffnen');
+              }
+              if('pl' == globalLanguage){
+                targetOpenInNewTab.setAttribute('title', 'Otwórz w nowej karcie'); 
+              }
+
+              right.appendChild(targetDownload);
+              right.appendChild(targetOpenInNewTab);
+            });
+
+            left.appendChild(imagesDiv);
+            imagesDiv.appendChild(targetImage);
+          }
+        }
+      }
+      catch(e){
+        console.error(e);
+      }
+    }
+  }
+
+  removeSlider(){
+    const slider = document.getElementById('image-downloader-slider');
+
+    if(slider){
+      slider.parentElement.removeChild(slider);
+    }
   }
 
   getAllImages() {
@@ -309,7 +492,19 @@ class ImagesManager {
  */
 // @ts-ignore
 browser.runtime.onMessage.addListener(request => {
+  const ImagesfastAction = new ImagesManager();
+
   switch (request.action) {
+    case 'generate-single-download-images': {
+      ImagesfastAction.generateDownloader(true);
+      return Promise.resolve(true);
+      break;
+    }
+    case 'generate-single-slider-images': {
+      ImagesfastAction.generateSlider();
+      return Promise.resolve(true);
+      break;
+    }
     case 'check-addons-availablitity': {
       return Promise.resolve(true);
       break;

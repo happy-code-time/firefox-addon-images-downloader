@@ -18,6 +18,8 @@ import Settings from './pages/Settings';
 
 import ImagesTag from './pages/ImagesTag';
 
+import Actions from './pages/Actions';
+
 import ImagesRequests from './pages/ImagesRequests';
 
 import ModuleLanguages from '../AppFiles/Modules/ModuleLanguages';
@@ -130,6 +132,11 @@ class App extends Component {
                         icon: <i className="fas fa-cog" />,
                         href: `${addonPrefixPopup()}#/settings`,
                       },
+                      {
+                        text: this.translations.actions,
+                        icon: <i className="fas fa-radiation" />,
+                        href: `${addonPrefixPopup()}#/actions`,
+                      },
                     ]
                   }
                 />
@@ -180,6 +187,7 @@ class App extends Component {
                     <Route exact path="/images-by-img-tag" component={ImagesTag} />
                     <Route exact path="/images-by-requests" component={ImagesRequests} />
                     <Route exact path="/settings" component={Settings} />
+                    <Route exact path="/actions" component={Actions} />
                   </Switch>
                 </HashRouter>
               }

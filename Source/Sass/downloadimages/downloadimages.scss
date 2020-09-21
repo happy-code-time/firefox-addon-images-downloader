@@ -1,6 +1,8 @@
 @import '../globals/declarations.scss';
 
 .DownloadImages {
+  height: calc(100vh - 50px);
+  overflow-y: auto;
 
   .NoDataImages {
     h1 {

@@ -9,7 +9,7 @@
   left: $dashboard_menu-width;
   z-index: 1;
   width: calc(100% - #{$dashboard_menu-width});
-  overflow-x: hidden;
+  overflow: hidden;
 
   .head {
     width: 100%;

@@ -21,6 +21,7 @@ body {
   }
 
   .Settings{
+    overflow-y: auto !important;
 
     input[type=number]{
       margin: 20px 0;

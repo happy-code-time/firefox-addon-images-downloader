@@ -13,7 +13,7 @@ const config = {
     entry: ['babel-polyfill', ENTRY_DASHBOARD.in ],
     output: {
         path: ENTRY_DASHBOARD.out,
-        filename: 'content.bundle.v3.0.2.js',
+        filename: 'content.bundle.v3.1.0.js',
     },
     cache: false,
     devtool: false,

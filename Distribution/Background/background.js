@@ -149,32 +149,52 @@ if(!getItem('localImages')){
   setItemToLocalStorage('localImages', []);  
 }
 
-if(null == getItem('allow-to-download')){
-  setItemToLocalStorage('allow-to-download', false);
-}
+const setFalse = () => {
+  [
+    'allowToSave',
+    'allowGifs',
+    'allowSvgs',
+    'allowIcos',
+    'allowWebp'
+  ].map( key => {
+    if(null == getItem(key)){
+      setItemToLocalStorage(key, false);
+    }    
+  });
+};
 
-if(null == getItem('allowGifs')){
-  setItemToLocalStorage('allowGifs', false);
-}
+const setTrue = () => {
+  [
+    'allowJpgs',
+    'allowPngs'
+  ].map( key => {
+    if(null == getItem(key)){
+      setItemToLocalStorage(key, true);
+    }    
+  });
+};
 
-if(null == getItem('allowJpgs')){
-  setItemToLocalStorage('allowJpgs', true);
-}
+const setEmptyString = () => {
+  [
+    'filterByImagesWidth',
+    'filterByImagesHeight'
+  ].map( key => {
+    if(null == getItem(key)){
+      localStorage.setItem(key, '');
+    }    
+  });
+};
 
-if(null == getItem('allowPngs')){
-  setItemToLocalStorage('allowPngs', true);
-}
-
-if(null == getItem('filterByImagesWidth')){
-  localStorage.setItem('filterByImagesWidth', '');
-}
-
-if(null == getItem('filterByImagesHeight')){
-  localStorage.setItem('filterByImagesHeight', '');
-}
+setFalse();
+setTrue();
+setEmptyString();
 
 if(null == localStorage.getItem('downloadicon')){
   localStorage.setItem('downloadicon', '📷');
+}
+
+if(null == localStorage.getItem('downloadiconsize')){
+  setItemToLocalStorage('downloadiconsize', '16');
 }
 
 //@ts-ignore
@@ -182,17 +202,69 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const { tab } = sender;
 
   switch (request.action) {
+    case 'generate-single-download-images' : {
+      getTab()
+        .then(activeTab => {
+          const { id } = activeTab[0];
+
+          //@ts-ignore
+          browser.tabs
+            .sendMessage(id, {
+              action: 'generate-single-download-images',
+            })
+            .then(response => {
+              return sendResponse(response);
+            })
+            .catch(error => {
+              return sendResponse(false);
+            });
+        })
+        .catch(error => {
+          return sendResponse(false);
+        });
+      break;
+    }
+    case 'generate-single-slider-images' : {
+      getTab()
+        .then(activeTab => {
+          const { id } = activeTab[0];
+
+          //@ts-ignore
+          browser.tabs
+            .sendMessage(id, {
+              action: 'generate-single-slider-images',
+            })
+            .then(response => {
+              return sendResponse(response);
+            })
+            .catch(error => {
+              return sendResponse(false);
+            });
+        })
+        .catch(error => {
+          return sendResponse(false);
+        });
+      break;
+    }
     case 'get-all' : {
       return sendResponse({
         downloadicon: localStorage.getItem('downloadicon'),
-        allowToSave: getItem('allow-to-download'),
+        allowToSave: getItem('allowToSave'),
         allowGifs: getItem('allowGifs'),
         allowPngs: getItem('allowPngs'),
         allowJpgs: getItem('allowJpgs'),
+        allowSvgs: getItem('allowSvgs'),
+        allowIcos: getItem('allowIcos'),
+        allowWebp: getItem('allowWebp'),
+        downloadiconsize: getItem('downloadiconsize'),
         filterByImagesWidth: getItem('filterByImagesWidth'),
         filterByImagesHeight: getItem('filterByImagesHeight'),
-        
+        globalLanguage: localStorage.getItem('globalLanguage') ? localStorage.getItem('globalLanguage') : 'en'
       });
+      break;
+    }
+    case 'set-downloadiconsize' : {
+      return sendResponse(setItemToLocalStorage('downloadiconsize', request.value));
       break;
     }
     case 'set-filterByImagesWidth' : {
@@ -204,15 +276,27 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break;
     }
     case 'set-allowJpgs' : {
-      return sendResponse(localStorage.setItem('allowJpgs', request.allowJpgs));
+      return sendResponse(localStorage.setItem('allowJpgs', request.allow));
       break;
     }
     case 'set-allowPngs' : {
-      return sendResponse(localStorage.setItem('allowPngs', request.allowPngs));
+      return sendResponse(localStorage.setItem('allowPngs', request.allow));
+      break;
+    }
+    case 'set-allowSvgs' : {
+      return sendResponse(localStorage.setItem('allowSvgs', request.allow));
+      break;
+    }
+    case 'set-allowIcos' : {
+      return sendResponse(localStorage.setItem('allowIcos', request.allow));
       break;
     }
     case 'set-allowGifs' : {
-      return sendResponse(localStorage.setItem('allowGifs', request.allowGifs));
+      return sendResponse(localStorage.setItem('allowGifs', request.allow));
+      break;
+    }
+    case 'set-allowWebp' : {
+      return sendResponse(localStorage.setItem('allowWebp', request.allow));
       break;
     }
     case 'set-download-icon' : {
@@ -223,12 +307,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
       return sendResponse(getItem('downloadicon'));
       break;
     }
-    case 'set-allow-to-download' : {
-      return sendResponse(setItemToLocalStorage('allow-to-download', request.allowToSave));
+    case 'set-allowToSave' : {
+      return sendResponse(setItemToLocalStorage('allowToSave', request.allow));
       break;
     }
     case 'get-allow-to-download' : {
-      return sendResponse(getItem('allow-to-download'));
+      return sendResponse(getItem('allowToSave'));
       break;
     }
     case 'set-image-local-store' : {
