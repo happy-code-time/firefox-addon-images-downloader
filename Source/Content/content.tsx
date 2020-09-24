@@ -32,7 +32,7 @@ let downloadiconsize = 16;
 let globalLanguage = 'en';
 
 //@ts-ignore
-browser.runtime.sendMessage({ action: 'get-all' }).then( data => { 
+browser.runtime.sendMessage({ action: 'get-all' }).then(data => {
   downloadicon = data.downloadicon;
   allowGifs = data.allowGifs;
   allowPngs = data.allowPngs;
@@ -48,11 +48,20 @@ browser.runtime.sendMessage({ action: 'get-all' }).then( data => {
 
 let generatingDownloader = false;
 
-class ImagesManager 
-{
-  
-  constructor(){
+class ImagesManager {
+
+  constructor() {
     this.generateSlider = this.generateSlider.bind(this);
+    this.setState = this.setState.bind(this);
+    this.updateSlider = this.updateSlider.bind(this);
+
+    //@ts-ignore
+    this.state = {
+      currentSlide: 0,
+      maxSlides: 0,
+      imagesPerSlide: 7,
+      sliderWidth: 0
+    };
   }
 
   /**
@@ -198,7 +207,7 @@ class ImagesManager
           const downloadButton = document.createElement('div');
           downloadButton.textContent = downloadicon;
           downloadButton.setAttribute('style', `z-index: 999999; position: absolute; top: 5px; left: 5px; cursor: pointer; font-size: 21px; line-height: 1; text-align: left; font-size: ${downloadiconsize}px; `);
-          
+
           downloadButton.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -213,60 +222,60 @@ class ImagesManager
              */
             if (-1 === src.indexOf('http://') && -1 === src.indexOf('https://') && -1 === src.indexOf('data:image') && -1 === src.indexOf('moz-extension://')) {
 
-                if ('/' !== src.charAt(0)) {
-                    src = `/${src}`;
-                }
+              if ('/' !== src.charAt(0)) {
+                src = `/${src}`;
+              }
 
-                link = `${protocol}//${hostname}${src}`;
+              link = `${protocol}//${hostname}${src}`;
             }
 
             /**
              * If the link has // - 2 slashes as prefix, remove them
              */
             if ('//' == src.substr(0, 2)) {
-                link = `${protocol}//${src.substr(2, src.length)}`;
+              link = `${protocol}//${src.substr(2, src.length)}`;
             }
 
             self.saveImage(singleImage.src);
           });
 
-          if(('gif' == this.getFileTypeFromHref(singleImage.src) || -1 !== singleImage.src.indexOf('.gif')) && !allowGifs){
+          if (('gif' == this.getFileTypeFromHref(singleImage.src) || -1 !== singleImage.src.indexOf('.gif')) && !allowGifs) {
             canRender = false;
           }
 
-          if(('jpg' == this.getFileTypeFromHref(singleImage.src) || 'jpeg' == this.getFileTypeFromHref(singleImage.src)) && !allowJpgs){
+          if (('jpg' == this.getFileTypeFromHref(singleImage.src) || 'jpeg' == this.getFileTypeFromHref(singleImage.src)) && !allowJpgs) {
             canRender = false;
           }
 
-          if('png' == this.getFileTypeFromHref(singleImage.src) && !allowPngs){
+          if ('png' == this.getFileTypeFromHref(singleImage.src) && !allowPngs) {
             canRender = false;
           }
 
-          if('svg' == this.getFileTypeFromHref(singleImage.src) && !allowSvgs){
+          if ('svg' == this.getFileTypeFromHref(singleImage.src) && !allowSvgs) {
             canRender = false;
           }
 
-          if('webp' == this.getFileTypeFromHref(singleImage.src) && !allowWebp){
+          if ('webp' == this.getFileTypeFromHref(singleImage.src) && !allowWebp) {
             canRender = false;
           }
 
-          if('ico' == this.getFileTypeFromHref(singleImage.src) && !allowIcos){
+          if ('ico' == this.getFileTypeFromHref(singleImage.src) && !allowIcos) {
             canRender = false;
           }
 
           const singleImageWidth = singleImage.naturalWidth || singleImage.clientWidth || singleImage.width;
           const singleImageHeight = singleImage.naturalHeight || singleImage.clientHeight || singleImage.height;
-          
 
-          if(filterByImagesWidth && singleImageWidth && singleImageWidth <= filterByImagesWidth){
+
+          if (filterByImagesWidth && singleImageWidth && singleImageWidth <= filterByImagesWidth) {
             canRender = false;
           }
 
-          if(filterByImagesHeight && singleImageHeight && singleImageHeight <= filterByImagesHeight){
+          if (filterByImagesHeight && singleImageHeight && singleImageHeight <= filterByImagesHeight) {
             canRender = false;
           }
 
-          if(canRender){
+          if (canRender) {
             divArroundTheImage.appendChild(downloadButton);
             singleImage.parentElement.appendChild(divArroundTheImage);
           }
@@ -283,183 +292,463 @@ class ImagesManager
     return null;
   }
 
-  generateSlider(){
-    const self = this;
-    const generatedLinks = [];
-    const images = document.getElementsByTagName('IMG');
+  generateHTMLElement(type = 'DIV', attributes = [], clickEvent = undefined, textContent = '') {
+    const DOMElement = document.createElement(type);
 
-    if(document.documentElement && images && images.length){
-    
-      try{
+    if (attributes && attributes.length) {
+      for (let x = 0; x <= attributes.length - 1; x++) {
+        DOMElement.setAttribute(attributes[x].name, attributes[x].value);
+      }
+    }
+
+    if (clickEvent && 'function' == typeof clickEvent) {
+      DOMElement.removeEventListener('click', clickEvent);
+      DOMElement.addEventListener('click', clickEvent);
+    }
+
+    if (textContent && typeof '8' == typeof textContent) {
+      DOMElement.textContent = textContent;
+    }
+
+    return DOMElement;
+  }
+
+  setState(object) {
+    const self = this;
+    const keys = Object.keys(object);
+
+    for (let x = 0; x <= keys.length - 1; x++) {
+      //@ts-ignore
+      if (self.state[keys[x]] !== object[keys[x]]) {
+        //@ts-ignore
+        self.state[keys[x]] = object[keys[x]];
+      }
+
+    }
+
+    this.updateSlider();
+  }
+
+  updateSlider() {
+    const slider = document.getElementById('download-images-slider-ul');
+
+    if (slider) {
+      //@ts-ignore
+      const { currentSlide } = this.state;
+      //@ts-ignore
+      const defaultStyle = `position: absolute; top: 0; width: ${this.state.sliderWidth}%; height: 150px; z-index: 1; transition-duration: 200ms; margin: 0; padding: 0;`;
+
+      if (0 == currentSlide) {
+        slider.setAttribute('style', `${defaultStyle} left: 0%`);
+      }
+      else {
+        slider.setAttribute('style', `${defaultStyle} left: -${currentSlide * 100}%`);
+      }
+    }
+  }
+
+  generateSlider() {
+    const self = this;
+    const images = this.getAllImages();
+
+    if (document.documentElement && images && images.length) {
+
+      try {
+        let maxSlides = -1;
+
+        for (let x = 0; x <= images.length - 1; x++) {
+          //@ts-ignore
+          if (x > 0 && x !== images.length - 1 && 0 == x % this.state.imagesPerSlide) {
+            maxSlides += 1;
+          }
+        }
+
+        if(0 > maxSlides){
+          maxSlides = 0;
+        }
+
+        self.setState(
+          {
+            maxSlides,
+            //@ts-ignore
+            sliderWidth: (100 * (maxSlides + 1))
+          }
+        );
         /**
          * Remove slider
          */
         this.removeSlider();
         /**
-         * Slider
+         * App
          */
-        const slider = document.createElement('DIV');
-        slider.setAttribute('id', 'image-downloader-slider');
-        slider.setAttribute('style', 'position: fixed; z-index: 9999999; left: 0; top: 0; width: 100vw; height: 100vh; overflow: hidden; background-color: rgba(0,0,0,0.66); ');
-        document.documentElement.appendChild(slider);
+        const app = self.generateHTMLElement(
+          'DIV',
+          [
+            {
+              name: 'id',
+              value: 'image-downloader-slider'
+            },
+            {
+              name: 'style',
+              value: 'position: fixed; z-index: 9999999; left: 0; top: 0; width: 100vw; height: 100vh; overflow: hidden; background-color: rgba(0,0,0,0.9); '
+            }
+          ]
+        );
+
+        document.documentElement.appendChild(app);
         /**
-         * Left site
+         * Content site
          */
-        const left = document.createElement('DIV');
-        left.setAttribute('style', 'position: fixed; left: 0; top: 0; width: 250px; height: 100vh; overflow-x: hidden; overflow-y: auto; border-right: 1px solid #36ACA3; display: flex; flex-direction: column;');
+        const content = self.generateHTMLElement(
+          'DIV',
+          [
+            {
+              name: 'style',
+              value: 'position: fixed; left: 0; bottom: 150px; width: 100vw; height: calc(100vh - 150px); overflow: hidden; display: flex;'
+            }
+          ]
+        );
         /**
-         * Right site
+         * Bottom site
          */
-        const right = document.createElement('DIV');
-        right.setAttribute('style', 'position: fixed; left: 250px; top: 0; width: calc(100vw - 251px); height: 100vh; overflow: hidden;  display: flex;;');
-        /**
+        const bottom = self.generateHTMLElement(
+          'DIV',
+          [
+            {
+              name: 'style',
+              value: 'position: fixed; left: 0; bottom: 0; width: 100vw; height: 150px; overflow-x: auto; overflow-y: hidden;'
+            }
+          ]
+        );
+
+        const slideLeftCallback = () => {
+          const images = document.getElementsByTagName('IMG');
+
+          if (document.documentElement && images && images.length) {
+            //@ts-ignore
+            const { maxSlides } = this.state;
+            //@ts-ignore
+            let { currentSlide } = this.state;
+
+            if (maxSlides && currentSlide > 0) {
+              currentSlide -= 1;
+
+              this.setState({ currentSlide });
+            }
+          }
+        }
+
+        const slideLeft = self.generateHTMLElement(
+          'DIV',
+          [
+            {
+              name: 'style',
+              value: 'position: fixed; left: 10px; bottom: 50px; font-size: 21px; width: 50px; height: 50px; border-radius: 50%; z-index: 2; cursor: pointer; background-color: #1873CC; color: rgb(255,255,255); font-weight: bold; line-height: 50px; text-align:center;'
+            }
+          ],
+          slideLeftCallback,
+          '<'
+        );
+
+        const slideRightCallback = () => {
+          const images = document.getElementsByTagName('IMG');
+
+          if (document.documentElement && images && images.length) {
+            //@ts-ignore
+            const { maxSlides } = this.state;
+            //@ts-ignore
+            let { currentSlide } = this.state;
+
+            if (maxSlides && currentSlide < maxSlides) {
+              currentSlide += 1;
+
+              this.setState({ currentSlide });
+            }
+          }
+        }
+
+        const slideRigth = self.generateHTMLElement(
+          'DIV',
+          [
+            {
+              name: 'style',
+              value: 'position: fixed; right: 10px; bottom: 50px; font-size: 21px; width: 50px; height: 50px; border-radius: 50%; z-index: 2; cursor: pointer; background-color: #1873CC; color: rgb(255,255,255); font-weight: bold; line-height: 50px; text-align:center;'
+            }
+          ],
+          slideRightCallback,
+          '>'
+        );
+
+        const sliderUlHolder = self.generateHTMLElement(
+          'DIV',
+          [
+            {
+              name: 'style',
+              value: 'position: fixed; left: 60px; bottom: 0; width: calc(100vw - 130px); height: 150px; z-index: 1; overflow: hidden;'
+            }
+          ],
+        );
+
+        const sliderUl = self.generateHTMLElement(
+          'UL',
+          [
+            {
+              name: 'style',
+              //@ts-ignore
+              value: `position: absolute; margin: 0; padding: 0; left: 0; top: 0; width: ${this.state.sliderWidth}%; height: 150px; z-index: 1; transition-duration: 200ms;`
+            },
+            {
+              name: 'id',
+              value: 'download-images-slider-ul'
+            }
+          ],
+        );
+
+        /**         
          * Appends
          */
-        slider.appendChild(left);
-        slider.appendChild(right);
-        /**
-         * Close icon
-         */
-        const closeIcon = document.createElement('DIV');
-        closeIcon.setAttribute('style', 'position: fixed; right: 20px; top: 10px; cursor: pointer; font-size: 28px;');
+        app.appendChild(content);
+        app.appendChild(bottom);
+        bottom.appendChild(slideLeft);
+        bottom.appendChild(slideRigth);
+        bottom.appendChild(sliderUlHolder);
+        sliderUlHolder.appendChild(sliderUl);
 
-        if('en' == globalLanguage){
-          closeIcon.setAttribute('title', 'Remove slider');
-        }
-        if('de' == globalLanguage){
-          closeIcon.setAttribute('title', 'Slider entfernen');
-        }
-        if('pl' == globalLanguage){
-          closeIcon.setAttribute('title', 'Usuń slider'); 
-        }
-
-        closeIcon.textContent = '❎';
-        closeIcon.addEventListener('click', this.removeSlider);
-        right.appendChild(closeIcon);
         /**
          * Generate images left site
-         */    
+         */
+
         for (let x = 0; x <= images.length - 1; x++) {
           const singleImage: any = images[x];
 
-          if(!generatedLinks.includes(singleImage.src)){
-            generatedLinks.push(singleImage.src);
+          if (singleImage.src) {
 
-            const imagesDiv = document.createElement('DIV');
-            imagesDiv.setAttribute('style', 'width: auto; height: auto; max-width: 210px; margin: 10px 20px; border-radius: 5px; display: flex;');
-  
+            const imagesDiv = self.generateHTMLElement(
+              'LI',
+              [
+                {
+                  name: 'style',
+                  //@ts-ignore
+                  value: `width: calc(${parseInt(100 / this.state.imagesPerSlide)}vw - ${parseInt(100 / this.state.imagesPerSlide)}px - 30px); margin: 10px 40px; height: 130px; border-radius: 5px; display: flex; float: left; padding: 0;`
+                },
+              ]
+            );
+
             let src = singleImage.src;
             let link = singleImage.src;
             const { hostname, protocol } = window.location;
-  
+
             /**
              * Build valid link
              */
             if (-1 === src.indexOf('http://') && -1 === src.indexOf('https://') && -1 === src.indexOf('data:image') && -1 === src.indexOf('moz-extension://')) {
-  
-                if ('/' !== src.charAt(0)) {
-                    src = `/${src}`;
-                }
-  
-                link = `${protocol}//${hostname}${src}`;
+
+              if ('/' !== src.charAt(0)) {
+                src = `/${src}`;
+              }
+
+              link = `${protocol}//${hostname}${src}`;
             }
-  
+
             /**
              * If the link has // - 2 slashes as prefix, remove them
              */
             if ('//' == src.substr(0, 2)) {
-                link = `${protocol}//${src.substr(2, src.length)}`;
+              link = `${protocol}//${src.substr(2, src.length)}`;
             }
-  
-            const targetImage = document.createElement('IMG');
-            targetImage.setAttribute('style', 'display: block; margin: auto; cursor: pointer;');
-            targetImage.setAttribute('src', link);
-  
+
+            const targetImage = self.generateHTMLElement(
+              'IMG',
+              [
+                {
+                  name: 'style',
+                  value: 'display: block; margin: auto; cursor: pointer; max-width: 100%; max-height: 100%;'
+                },
+                {
+                  name: 'src',
+                  value: link
+                },
+              ]
+            );
+
             targetImage.addEventListener('click', (e) => {
+              /**
+               * Image preview
+               */
               let target = document.getElementById('image-holder');
 
-              if(target){
+              if (target) {
                 target.parentElement.removeChild(target);
               }
 
-              target = document.createElement('IMG');
-              target.setAttribute('id', 'image-holder');
-              target.setAttribute('style', 'display: block; margin: auto; max-width: 80vw; max-height: 80vh;');
-              target.setAttribute('src', link);
-              right.appendChild(target);
+              target = self.generateHTMLElement(
+                'IMG',
+                [
+                  {
+                    name: 'id',
+                    value: 'image-holder'
+                  },
+                  {
+                    name: 'style',
+                    value: 'display: block; margin: auto; max-width: 80vw; max-height: 80vh;'
+                  },
+                  {
+                    name: 'class',
+                    value: 'images-to-save'
+                  },
+                  {
+                    name: 'src',
+                    value: link
+                  },
+                ]
+              );
 
+              content.appendChild(target);
+
+              /**
+               * Download image button
+               */
               let targetDownload = document.getElementById('image-downloader-download');
 
-              if(targetDownload){
+              if (targetDownload) {
                 targetDownload.parentElement.removeChild(targetDownload);
               }
 
-              targetDownload = document.createElement('DIV');
-              targetDownload.setAttribute('id', 'image-downloader-download');
-              targetDownload.setAttribute('style', 'position: fixed; right: 80px; top: 10px; cursor: pointer; font-size: 28px;');
+              let targetDownloadTitle = 'Download';
 
-              if('en' == globalLanguage){
-                targetDownload.setAttribute('title', 'Download');
-              }
-              if('de' == globalLanguage){
-                targetDownload.setAttribute('title', 'Herunterladen');
-              }
-              if('pl' == globalLanguage){
-                targetDownload.setAttribute('title', 'Pobierz'); 
+              if ('de' == globalLanguage) {
+                targetDownloadTitle = 'Herunterladen';
               }
 
-              targetDownload.textContent = '📁';
+              if ('pl' == globalLanguage) {
+                targetDownloadTitle = 'Pobierz';
+              }
+
+              targetDownload = self.generateHTMLElement(
+                'DIV',
+                [
+                  {
+                    name: 'id',
+                    value: 'image-downloader-download'
+                  },
+                  {
+                    name: 'style',
+                    value: 'position: fixed; right: 80px; top: 10px; cursor: pointer; font-size: 28px;'
+                  },
+                  {
+                    name: 'title',
+                    value: targetDownloadTitle
+                  }
+                ],
+                undefined,
+                '📥'
+              );
 
               targetDownload.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopImmediatePropagation();
-                e.stopPropagation();    
+                e.stopPropagation();
                 self.saveImage(link);
               });
 
-
+              /**
+               * Open in new tb
+               */
               let targetOpenInNewTab = document.getElementById('image-downloader-open-in-new-tab');
 
-              if(targetOpenInNewTab){
+              if (targetOpenInNewTab) {
                 targetOpenInNewTab.parentElement.removeChild(targetOpenInNewTab);
               }
 
-              targetOpenInNewTab = document.createElement('A');
-              targetOpenInNewTab.setAttribute('id', 'image-downloader-open-in-new-tab');
-              targetOpenInNewTab.setAttribute('style', 'position: fixed; right: 140px; top: 10px; cursor: pointer; font-size: 28px; text-decoration: none;');
-              targetOpenInNewTab.setAttribute('href', link);
-              targetOpenInNewTab.setAttribute('target', '_blank');
-              targetOpenInNewTab.textContent = '👀';
+              let targetOpenInNewTabTitle = 'Open in new tab';
 
-              if('en' == globalLanguage){
-                targetOpenInNewTab.setAttribute('title', 'Open in new tab');
-              }
-              if('de' == globalLanguage){
-                targetOpenInNewTab.setAttribute('title', 'Im neuen Tab öffnen');
-              }
-              if('pl' == globalLanguage){
-                targetOpenInNewTab.setAttribute('title', 'Otwórz w nowej karcie'); 
+              if ('de' == globalLanguage) {
+                targetOpenInNewTabTitle = 'Im neuen Tab öffnen';
               }
 
-              right.appendChild(targetDownload);
-              right.appendChild(targetOpenInNewTab);
+              if ('pl' == globalLanguage) {
+                targetOpenInNewTabTitle = 'Otwórz w nowej karcie';
+              }
+
+              targetOpenInNewTab = self.generateHTMLElement(
+                'A',
+                [
+                  {
+                    name: 'id',
+                    value: 'image-downloader-open-in-new-tab'
+                  },
+                  {
+                    name: 'style',
+                    value: 'position: fixed; right: 140px; top: 10px; cursor: pointer; font-size: 28px; text-decoration: none; color: rgb(255,255,255);'
+                  },
+                  {
+                    name: 'title',
+                    value: targetOpenInNewTabTitle
+                  },
+
+                  {
+                    name: 'href',
+                    value: link
+                  },
+                  {
+                    name: 'target',
+                    value: '_blank'
+                  },
+                ],
+                undefined,
+                '🗺'
+              );
+
+              content.appendChild(targetDownload);
+              content.appendChild(targetOpenInNewTab);
             });
 
-            left.appendChild(imagesDiv);
+            sliderUl.appendChild(imagesDiv);
             imagesDiv.appendChild(targetImage);
           }
         }
+
+        /**
+         * Close icon
+         */
+        let closeIconTitle = 'Remove slider';
+
+        if ('de' == globalLanguage) {
+          closeIconTitle = 'Slider entfernen';
+        }
+
+        if ('pl' == globalLanguage) {
+          closeIconTitle = 'Usuń slider';
+        }
+
+        const closeIcon = self.generateHTMLElement(
+          'DIV',
+          [
+            {
+              name: 'style',
+              value: 'position: fixed; right: 20px; top: 10px; cursor: pointer; font-size: 28px;'
+            },
+            {
+              name: 'title',
+              value: closeIconTitle
+            },
+          ],
+          self.removeSlider,
+          '❌'
+        );
+        content.appendChild(closeIcon);
+
       }
-      catch(e){
+      catch (e) {
         console.error(e);
       }
     }
   }
 
-  removeSlider(){
+  removeSlider() {
     const slider = document.getElementById('image-downloader-slider');
 
-    if(slider){
+    if (slider) {
       slider.parentElement.removeChild(slider);
     }
   }
@@ -551,24 +840,24 @@ const checkElementsToStart = () => {
   document.addEventListener('readystatechange', async () => {
     //@ts-ignore
     await browser.runtime.sendMessage({ action: 'get-allow-to-download' })
-    .then( allow => {
-      if(allow){
-        Images.generateDownloader();
-      }
-    })
-    .catch( e => {});
+      .then(allow => {
+        if (allow) {
+          Images.generateDownloader();
+        }
+      })
+      .catch(e => { });
   });
 };
 
-setInterval( async () => {
-    //@ts-ignore
-    await browser.runtime.sendMessage({ action: 'get-allow-to-download' })
-    .then( allow => {
-      if(allow){
+setInterval(async () => {
+  //@ts-ignore
+  await browser.runtime.sendMessage({ action: 'get-allow-to-download' })
+    .then(allow => {
+      if (allow) {
         Images.generateDownloader();
       }
     })
-    .catch( e => {});
+    .catch(e => { });
 
 }, 10000);
 

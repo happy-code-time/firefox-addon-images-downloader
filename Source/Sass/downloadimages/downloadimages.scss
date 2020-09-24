@@ -90,7 +90,7 @@
 
     .single-tab:hover {
       cursor: pointer;
-      box-shadow: 0px 0px 6px $green;
+      box-shadow: 0px 0px 6px $dodgerblue;
     }
   }
 
@@ -131,7 +131,7 @@
         font-size: 0.75rem;
         margin: 0 10px;
         border-radius: 3px;
-        background-color: $green;
+        background-color: $dodgerblue;
         color: $white;
       }
 
@@ -176,7 +176,7 @@
         }
 
         .archive-icon-all {
-          color: $green;
+          color: $dodgerblue;
         }
 
         .button-action:hover {
@@ -277,7 +277,7 @@
       .h1{
         i{
           cursor: pointer;
-          color: $green;
+          color: $dodgerblue;
           font-size: 1.6rem;
           margin-left: 20px;
         }
@@ -320,11 +320,11 @@
         }
 
         .star-remove:hover {
-          color: $green;
+          color: $dodgerblue;
         }
 
         .star-add:hover {
-          color: $green;
+          color: $dodgerblue;
         }
 
         img {
@@ -355,7 +355,7 @@
           left: 0;
           height: 40px;
           width: 100%;
-          background-color: $green;
+          background-color: $dodgerblue;
           color: $white;
           text-align: center;
           line-height: 40px;

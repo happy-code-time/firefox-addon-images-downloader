@@ -117,7 +117,7 @@ const EN={
   languages: 'Languages',
   allowToSave: 'Allow to generate a download button on each page for each image (Check for new images each 10 seconds).',
   fastAllowToSave: 'Generate a download button for the current page. Please remember to allow image types to be downloaded (from the settings page).',
-  fastGenerateSlider: 'Generate a slider, base on all images there are available on the current website.',
+  fastGenerateSlider: 'Generate a slider, based on all images there are available on the current website.',
   settings: 'Settings',
   downloadicon: 'Set a custom download icon.',
   allowGifs: 'Allow to generate the download button for gif`s (.gif).',

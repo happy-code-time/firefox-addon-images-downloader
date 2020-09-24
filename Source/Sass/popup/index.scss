@@ -150,7 +150,7 @@ body,
         left: 0;
         height: 40px;
         width: 100%;
-        background-color: $green;
+        background-color: $dodgerblue;
         color: $white;
         text-align: center;
         line-height: 40px;
@@ -232,14 +232,14 @@ body,
         text-decoration: none;
         border-radius: 5px;
         border: 1px solid $border-color;
-        background-color: $green;
+        background-color: $dodgerblue;
         color: $white;
         box-shadow: 0px 0px 8px transparent;
         transition-duration: $default_transition;
       }
   
       .link:hover {
-        box-shadow: 0px 0px 8px $green;
+        box-shadow: 0px 0px 8px $dodgerblue;
       }
     }
   }
@@ -313,11 +313,11 @@ body,
     box-sizing: border-box;
     padding: 10px;
     border-radius: 5px;
-    border:1px solid $green;
+    border:1px solid $dodgerblue;
     line-height: 20px;
     text-align: center;
     color: $white;
-    background-color: $green;
+    background-color: $dodgerblue;
     box-shadow:0px 0px 6px transparent;
     margin: 10px;
     width: calc(100% - 20px);
@@ -326,7 +326,7 @@ body,
 
   .button-action:hover{
     border:1px solid transparent;
-    box-shadow:0px 0px 6px $green;
+    box-shadow:0px 0px 6px $dodgerblue;
     cursor: pointer;
   }
 }

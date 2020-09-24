@@ -141,7 +141,7 @@ class ModuleTabs extends React.Component {
                                     </p>
                                     <div className="iframe-disabler">
                                         <div className="iframe-holder">
-                                            <img alt="image" src={`${addonRoot()}../Images/logo-512.png`} />
+                                            <img alt="image" src={`${addonRoot()}../Images/logo-128.png`} />
                                         </div>
                                     </div>
                                 </Link>

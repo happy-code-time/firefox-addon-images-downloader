@@ -1,6 +1,6 @@
 {
   "name": "imagedownloader",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Image Downloader",
   "scripts": {
     "compile": "./node_modules/.bin/gulp compile",
@@ -48,7 +48,7 @@
     "gulp-postcss": "^8.0.0",
     "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
-    "gulp-uglify": "^3.1.0",
+    "gulp-uglify": "^3.1.1",
     "gulp4-run-sequence": "^1.0.1",
     "imagemin-jpeg-recompress": "^6.0.0",
     "node-sass": "^4.13.1",
